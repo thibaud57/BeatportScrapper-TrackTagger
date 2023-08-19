@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 
 from constants import TRACKS_FILE_PATH, VALIDATE, MATCHING_SCORE_LIMIT
-from enums import TrackInfo, MusicFormat
+from enums import MusicFormat
 from loggers import SuccessLog
 from managers import MetadataManager, TrackManager
 from scrappers import SeleniumHelper, TrackMatcher
