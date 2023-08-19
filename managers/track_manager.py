@@ -4,7 +4,8 @@ import shutil
 from mutagen.easyid3 import EasyID3
 
 from constants import DONE_FOLDER_NAME
-from enums import ID3Metadata
+from enums import ID3Metadata, MusicFormat
+from utils.utils import clean_filename
 
 
 class TrackManager:
@@ -15,9 +16,11 @@ class TrackManager:
     def rename_track(self):
         print('Rename track')
         audio = EasyID3(self.file_path)
-        new_filename = ', '.join(audio.get(ID3Metadata.ARTIST.value)).replace('/', '') + " - " + ', '.join(
-            audio.get(ID3Metadata.TITLE.value)).replace(
-            '/', '') + ".mp3"
+
+        artist = clean_filename(', '.join(audio.get(ID3Metadata.ARTIST.value, [])))
+        title = clean_filename(', '.join(audio.get(ID3Metadata.TITLE.value, [])))
+        new_filename = f"{artist} - {title}{MusicFormat.MP3.value}"
+
         new_file_path = os.path.join(os.path.dirname(self.file_path), new_filename)
         os.rename(self.file_path, new_file_path)
         self.file_path = new_file_path

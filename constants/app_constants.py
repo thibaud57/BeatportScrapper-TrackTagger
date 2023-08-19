@@ -6,9 +6,7 @@ CHROME_DRIVER = './chromedriver.exe'
 ORIGINAL_MIX = " (original mix)"
 DATE_FORMAT = "%Y-%m-%dT%H:%M:%S"
 VALIDATE = 'y'
-DELIMITER = ';'
 DONE_FOLDER_NAME = "done"  # Can be replaced with the desired folder name
-CSV_FILE_PATH = 'F:\\Bureau\\test.csv'  # Replace with your preferred file path
 TRACKS_FILE_PATH = 'D:\Rename\\'  # Replace with your preferred file path
 MATCHING_SCORE_LIMIT = 70
 """
@@ -17,4 +15,3 @@ A value of 0 makes the matching algorithm very lenient, allowing almost any resu
 On the other hand, a value of 100 makes the algorithm very strict, only considering results that are an exact match. 
 Adjust this value between 0 and 100 based on your desired level of matching accuracy.
 """
-

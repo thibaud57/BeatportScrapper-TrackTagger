@@ -1,15 +1,17 @@
 import json
-import requests
-
 from urllib.parse import quote_plus
+
+import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
+
 from constants import MAX_RETRIES, SCRIPT_ID, BEATPORT_SEARCH_URL, USER_AGENT, CHROME_DRIVER
 from enums import StatusCode
+from utils.utils import clean_string
 
 
 class SeleniumHelper:
@@ -22,8 +24,8 @@ class SeleniumHelper:
         self.driver.quit()
 
     def search_track(self, artist, title):
-        artist = self.clean_string(artist)
-        title = self.clean_string(title)
+        artist = clean_string(artist)
+        title = clean_string(title)
 
         print(f"Searching track: {artist} - {title}")
         search_url = f"{BEATPORT_SEARCH_URL + quote_plus(artist + ' ' + title)}"
@@ -58,7 +60,3 @@ class SeleniumHelper:
 
         print("Max retries reached. Exiting.")
         return None
-
-    @staticmethod
-    def clean_string(s):
-        return s.replace('_', ' ')

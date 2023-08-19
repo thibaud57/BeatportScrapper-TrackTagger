@@ -3,7 +3,7 @@ from datetime import datetime
 from fuzzywuzzy import fuzz
 
 from constants import ORIGINAL_MIX, DATE_FORMAT, MATCHING_SCORE_LIMIT
-from enums import ArtistType, TrackInfo, BeatportField, CsvField
+from enums import ArtistType, TrackInfo, BeatportField
 
 
 class TrackMatcher:
@@ -56,12 +56,10 @@ class TrackMatcher:
             return f"{track_name} ({mix_name})"
 
     @staticmethod
-    def find_best_match(csv_row, json_data_list):
-        headers = [CsvField.FILENAME.value, CsvField.NAME.value, CsvField.TITLE.value]
-        csv_data = dict(zip(headers, csv_row))
+    def find_best_match(artist, title, json_data_list):
+        csv_artist = artist.lower().replace('_', ' ')
+        csv_title = title.lower().replace('_', ' ')
 
-        csv_artist, csv_title = map(lambda x: x.lower().replace('_', ' '),
-                                    [csv_data[CsvField.NAME.value], csv_data[CsvField.TITLE.value]])
         if csv_title.find("(") == -1 and csv_title.find(")") == -1:
             csv_title += ORIGINAL_MIX
 

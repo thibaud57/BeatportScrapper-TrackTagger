@@ -9,6 +9,13 @@ from enums import ID3Metadata, TrackInfo
 
 
 class MetadataManager:
+    @staticmethod
+    def extract_metadata(file_path):
+        audio = EasyID3(file_path)
+        artist = audio.get(ID3Metadata.ARTIST.value, [None])[0]
+        title = audio.get(ID3Metadata.TITLE.value, [None])[0]
+        return artist, title
+
     def update_metadata(self, file_path, track):
         audio = EasyID3(file_path)
         try:
@@ -18,7 +25,8 @@ class MetadataManager:
         audio[ID3Metadata.ARTIST.value] = track[TrackInfo.ARTISTS.value]
         audio[ID3Metadata.TITLE.value] = track[TrackInfo.TITLE.value]
         audio[ID3Metadata.ALBUM.value] = track[TrackInfo.ALBUM.value]
-        audio[ID3Metadata.DATE.value] = str(track[TrackInfo.DATE.value]) if track[TrackInfo.DATE.value] is not None else ''
+        audio[ID3Metadata.DATE.value] = str(track[TrackInfo.DATE.value]) if track[
+                                                                                TrackInfo.DATE.value] is not None else ''
         audio[ID3Metadata.GENRE.value] = track[TrackInfo.GENRE.value]
         audio[ID3Metadata.ORGANIZATION.value] = track[TrackInfo.LABEL.value]
 
