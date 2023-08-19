@@ -34,6 +34,9 @@ class TrackMatcher:
             TrackInfo.ALBUM.value: track.get(BeatportField.RELEASE.value, {}).get(BeatportField.RELEASE_NAME.value, ''),
             TrackInfo.ARTWORK.value: track.get(BeatportField.RELEASE.value, {}).get(
                 BeatportField.RELEASE_IMAGE_URI.value, ''),
+            TrackInfo.TRACK_NUMBER.value: track.get(BeatportField.TRACK_NUMBER.value, 0),
+            TrackInfo.BPM.value: track.get(BeatportField.BPM.value, 0),
+            TrackInfo.KEY.value: track.get(BeatportField.KEY_NAME.value, ''),
         }
 
     @staticmethod

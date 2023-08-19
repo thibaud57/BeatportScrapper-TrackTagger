@@ -9,3 +9,6 @@ class TrackInfo(Enum):
     DATE = 'date'
     ALBUM = 'album'
     ARTWORK = 'artwork'
+    TRACK_NUMBER = 'track_number'
+    BPM = 'bpm'
+    KEY = 'key'

@@ -18,6 +18,8 @@ class MetadataManager:
 
     def update_metadata(self, file_path, track):
         audio = EasyID3(file_path)
+        print("bbbbbbbbbbbbbbb")
+        print(track)
         try:
             audio.add_tags()
         except Exception:
@@ -29,6 +31,9 @@ class MetadataManager:
                                                                                 TrackInfo.DATE.value] is not None else ''
         audio[ID3Metadata.GENRE.value] = track[TrackInfo.GENRE.value]
         audio[ID3Metadata.ORGANIZATION.value] = track[TrackInfo.LABEL.value]
+        audio[ID3Metadata.TRACK_NUMBER.value] = str(track[TrackInfo.TRACK_NUMBER.value])
+        audio[ID3Metadata.BPM.value] = str(track[TrackInfo.BPM.value])
+        audio[ID3Metadata.TKEY.value] = track[TrackInfo.KEY.value]
 
         audio.save()
 

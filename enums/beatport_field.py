@@ -15,3 +15,6 @@ class BeatportField(Enum):
     RELEASE = 'release'
     RELEASE_NAME = 'release_name'
     RELEASE_IMAGE_URI = 'release_image_uri'
+    TRACK_NUMBER = 'track_number'
+    BPM = 'bpm'
+    KEY_NAME = 'key_name'

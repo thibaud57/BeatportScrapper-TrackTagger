@@ -9,3 +9,6 @@ class ID3Metadata(Enum):
     GENRE = 'genre'
     ORGANIZATION = 'organization'
     APIC = 'APIC:'
+    TRACK_NUMBER = 'tracknumber'
+    BPM = 'bpm'
+    TKEY = 'TKEY'

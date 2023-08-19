@@ -1,0 +1,6 @@
+beautifulsoup4==4.11.1
+fuzzywuzzy==0.18.0
+mutagen==1.46.0
+pandas==1.5.2
+Requests==2.31.0
+selenium==4.11.2
