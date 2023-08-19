@@ -13,19 +13,19 @@ class TrackManager:
         self.file_path = file_path
         self.metadata_manager = metadata_manager
 
-    def rename_track(self):
+    def _rename_track(self):
         print('Rename track')
         audio = EasyID3(self.file_path)
 
         artist = clean_filename(', '.join(audio.get(ID3Metadata.ARTIST.value, [])))
         title = clean_filename(', '.join(audio.get(ID3Metadata.TITLE.value, [])))
-        new_filename = f"{artist} - {title}{MusicFormat.MP3.value}"
+        new_filename = f'{artist} - {title}{MusicFormat.MP3.value}'
 
         new_file_path = os.path.join(os.path.dirname(self.file_path), new_filename)
         os.rename(self.file_path, new_file_path)
         self.file_path = new_file_path
 
-    def move_track_to_done_folder(self):
+    def _move_track_to_done_folder(self):
         print('Moving file to final folder')
         directory = os.path.dirname(self.file_path)
         done_folder_path = os.path.join(directory, DONE_FOLDER_NAME)
@@ -43,8 +43,8 @@ class TrackManager:
         try:
             self.metadata_manager.delete_metadata(self.file_path)
             self.metadata_manager.update_metadata(self.file_path, track_matching)
-            self.rename_track()
-            return self.move_track_to_done_folder()  # Workflow completed successfully
+            self._rename_track()
+            return self._move_track_to_done_folder()  # Workflow completed successfully
         except FileNotFoundError:
-            print(f"File not found: {self.file_path}")
+            print(f'File not found: {self.file_path}')
             return None  # An error occurred during the workflow

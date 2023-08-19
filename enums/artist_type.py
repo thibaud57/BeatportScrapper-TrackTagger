@@ -2,5 +2,5 @@ from enum import Enum
 
 
 class ArtistType(Enum):
-    ARTIST = "Artist"
-    REMIXER = "Remixer"
+    ARTIST = 'Artist'
+    REMIXER = 'Remixer'

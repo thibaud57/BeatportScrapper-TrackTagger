@@ -12,7 +12,7 @@ class TrackMatcher:
             return None
 
         if not isinstance(data, dict):
-            raise TypeError("Data must be a dict.")
+            raise TypeError('Data must be a dict.')
 
         tracks = data.get('props', {}).get('pageProps', {}).get('dehydratedState', {}).get('queries', [{}])[0].get(
             'state',
@@ -20,14 +20,14 @@ class TrackMatcher:
             'data', {}).get('tracks', {}).get('data', [])
 
         if tracks:
-            return [self.extract_track_info(track) for track in tracks]
+            return [self._extract_track_info(track) for track in tracks]
         else:
             return None
 
-    def extract_track_info(self, track):
+    def _extract_track_info(self, track):
         return {
-            TrackInfo.ARTISTS.value: self.extract_artists(track),
-            TrackInfo.TITLE.value: self.extract_title(track),
+            TrackInfo.ARTISTS.value: self._extract_artists(track),
+            TrackInfo.TITLE.value: self._extract_title(track),
             TrackInfo.GENRE.value: track.get(BeatportField.GENRE.value, {})[0].get(BeatportField.GENRE_NAME.value, ''),
             TrackInfo.LABEL.value: track.get(BeatportField.LABEL.value, {}).get(BeatportField.LABEL_NAME.value, ''),
             TrackInfo.DATE.value: datetime.strptime(track.get(BeatportField.RELEASE_DATE.value, ''), DATE_FORMAT).year,
@@ -37,7 +37,7 @@ class TrackMatcher:
         }
 
     @staticmethod
-    def extract_artists(track):
+    def _extract_artists(track):
         artists = track.get(BeatportField.ARTISTS.value, [])
         filtered_artists = [
             artist.get(BeatportField.ARTIST_NAME.value, '')
@@ -47,20 +47,20 @@ class TrackMatcher:
         return ', '.join(filtered_artists)
 
     @staticmethod
-    def extract_title(track):
+    def _extract_title(track):
         track_name = track.get(BeatportField.TRACK_NAME.value, '')
         mix_name = track.get(BeatportField.MIX_NAME.value, '')
         if mix_name in track_name:
             return track_name
         else:
-            return f"{track_name} ({mix_name})"
+            return f'{track_name} ({mix_name})'
 
     @staticmethod
     def find_best_match(artist, title, json_data_list):
         csv_artist = artist.lower().replace('_', ' ')
         csv_title = title.lower().replace('_', ' ')
 
-        if csv_title.find("(") == -1 and csv_title.find(")") == -1:
+        if csv_title.find('(') == -1 and csv_title.find(')') == -1:
             csv_title += ORIGINAL_MIX
 
         max_score = -1

@@ -20,7 +20,7 @@ try:
 
     for file in files:
         if file.endswith(MusicFormat.MP3.value):
-            file_path = tracks_file_path / file
+            file_path = tracks_file_path / str(file)
             artist, title = metadata_manager.extract_metadata(file_path)
 
             data = helper.search_track(artist, title)
@@ -28,16 +28,16 @@ try:
             if track_info_list := track_matcher.parse_track_info(data):
                 best_match, best_score = track_matcher.find_best_match(artist, title, track_info_list)
                 if best_match is None:
-                    print("No best match found")
+                    print('No best match found')
                 else:
-                    print(f"Best match: {best_match[TrackInfo.ARTISTS.value]} - {best_match[TrackInfo.TITLE.value]}")
+                    print(f'Best match: {best_match[TrackInfo.ARTISTS.value]} - {best_match[TrackInfo.TITLE.value]}')
                     if best_score >= MATCHING_SCORE_LIMIT or get_user_input() == VALIDATE:
                         manager = TrackManager(file_path, metadata_manager)
                         new_file_path = manager.run_track_processing_workflow(best_match)
                         if new_file_path:
                             tracks_in_success.append((file_path, artist, title, new_file_path))
 except Exception as e:
-    print(f"An error occurred: {e}")
+    print(f'An error occurred: {e}')
 finally:
     success_log = SuccessLog(tracks_in_success, tracks_file_path)
     success_log.write_success_log()

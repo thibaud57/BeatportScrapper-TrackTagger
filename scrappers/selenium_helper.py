@@ -27,13 +27,13 @@ class SeleniumHelper:
         artist = clean_string(artist)
         title = clean_string(title)
 
-        print(f"Searching track: {artist} - {title}")
+        print(f'Searching track: {artist} - {title}')
         search_url = f"{BEATPORT_SEARCH_URL + quote_plus(artist + ' ' + title)}"
         headers = {'User-Agent': USER_AGENT}
 
         for _ in range(MAX_RETRIES):
             response = requests.get(search_url, headers=headers)
-            print(f"With search url: {search_url} with status: {response.status_code}")
+            print(f'With search url: {search_url} with status: {response.status_code}')
 
             if response.status_code == StatusCode.SUCCESS.value:
                 self.driver.get(search_url)
@@ -51,12 +51,12 @@ class SeleniumHelper:
                 return data
 
             elif response.status_code == StatusCode.FORBIDDEN.value:
-                print("Received a 403 status code. Retrying...")
+                print('Received a 403 status code. Retrying...')
                 continue
 
             else:
-                print(f"Failed to fetch the page. Status code: {response.status_code}")
+                print(f'Failed to fetch the page. Status code: {response.status_code}')
                 return None
 
-        print("Max retries reached. Exiting.")
+        print('Max retries reached. Exiting.')
         return None

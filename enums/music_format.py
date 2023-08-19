@@ -2,4 +2,4 @@ from enum import Enum
 
 
 class MusicFormat(Enum):
-    MP3 = ".mp3"
+    MP3 = '.mp3'

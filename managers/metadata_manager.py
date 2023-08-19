@@ -32,19 +32,19 @@ class MetadataManager:
 
         audio.save()
 
-        self.update_artwork(file_path, track[TrackInfo.ARTWORK.value])
+        self._update_artwork(file_path, track[TrackInfo.ARTWORK.value])
 
     @staticmethod
     def delete_metadata(file_path):
         print('Delete metadata')
         if not os.path.exists(file_path):
-            raise FileNotFoundError(f"File does not exist: {file_path}")
+            raise FileNotFoundError(f'File does not exist: {file_path}')
         audio = EasyID3(file_path)
         audio.delete()
         audio.save()
 
     @staticmethod
-    def update_artwork(file_path, artwork_url):
+    def _update_artwork(file_path, artwork_url):
         print('Update artwork')
         audio = MP3(file_path, ID3=ID3)
 
