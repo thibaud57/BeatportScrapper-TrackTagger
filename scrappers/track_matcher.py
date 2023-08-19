@@ -30,13 +30,14 @@ class TrackMatcher:
             TrackInfo.TITLE.value: self._extract_title(track),
             TrackInfo.GENRE.value: track.get(BeatportField.GENRE.value, {})[0].get(BeatportField.GENRE_NAME.value, ''),
             TrackInfo.LABEL.value: track.get(BeatportField.LABEL.value, {}).get(BeatportField.LABEL_NAME.value, ''),
-            TrackInfo.DATE.value: datetime.strptime(track.get(BeatportField.RELEASE_DATE.value, ''), DATE_FORMAT).year,
+            TrackInfo.DATE.value: self._extract_date(True, track),
+            TrackInfo.ORIGINAL_DATE.value: self._extract_date(False, track),
             TrackInfo.ALBUM.value: track.get(BeatportField.RELEASE.value, {}).get(BeatportField.RELEASE_NAME.value, ''),
             TrackInfo.ARTWORK.value: track.get(BeatportField.RELEASE.value, {}).get(
                 BeatportField.RELEASE_IMAGE_URI.value, ''),
             TrackInfo.TRACK_NUMBER.value: track.get(BeatportField.TRACK_NUMBER.value, 0),
             TrackInfo.BPM.value: track.get(BeatportField.BPM.value, 0),
-            TrackInfo.KEY.value: track.get(BeatportField.KEY_NAME.value, ''),
+            TrackInfo.ISRC.value: track.get(BeatportField.ISRC.value, ''),
         }
 
     @staticmethod
@@ -57,6 +58,20 @@ class TrackMatcher:
             return track_name
         else:
             return f'{track_name} ({mix_name})'
+
+    @staticmethod
+    def _extract_date(only_year, track):
+        release_date_string = track.get(BeatportField.RELEASE_DATE.value, '')
+        if release_date_string:
+            original_date = datetime.strptime(release_date_string, DATE_FORMAT)
+        else:
+            original_date = None
+        if original_date:
+            if only_year:
+                return str(original_date.year)
+            return original_date.strftime('%Y-%m-%d')
+        return ''
+
 
     @staticmethod
     def find_best_match(artist, title, json_data_list):

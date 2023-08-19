@@ -27,7 +27,7 @@ class SeleniumHelper:
         artist = clean_string(artist)
         title = clean_string(title)
 
-        print(f'Searching track: {artist} - {title}')
+        print(f'\nSearching track: {artist} - {title}')
         search_url = f"{BEATPORT_SEARCH_URL + quote_plus(artist + ' ' + title)}"
         headers = {'User-Agent': USER_AGENT}
 

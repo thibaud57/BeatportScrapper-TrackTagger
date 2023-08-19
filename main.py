@@ -16,6 +16,7 @@ track_matcher = TrackMatcher()
 metadata_manager = MetadataManager()
 
 try:
+    print('###START###')
     files = [f for f in os.listdir(tracks_file_path) if os.path.isfile(os.path.join(tracks_file_path, f))]
 
     for file in files:
@@ -30,7 +31,6 @@ try:
                 if best_match is None:
                     print('No best match found')
                 else:
-                    print(f'Best match: {best_match[TrackInfo.ARTISTS.value]} - {best_match[TrackInfo.TITLE.value]}')
                     if best_score >= MATCHING_SCORE_LIMIT or get_user_input() == VALIDATE:
                         manager = TrackManager(file_path, metadata_manager)
                         new_file_path = manager.run_track_processing_workflow(best_match)
@@ -42,3 +42,4 @@ finally:
     success_log = SuccessLog(tracks_in_success, tracks_file_path)
     success_log.write_success_log()
     helper.close()
+    print('\n###END###')

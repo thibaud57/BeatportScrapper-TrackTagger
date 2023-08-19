@@ -18,3 +18,4 @@ class BeatportField(Enum):
     TRACK_NUMBER = 'track_number'
     BPM = 'bpm'
     KEY_NAME = 'key_name'
+    ISRC = 'isrc'
