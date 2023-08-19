@@ -12,8 +12,7 @@ class SuccessLog:
             os.makedirs(self.done_folder_path)
 
     def write_success_log(self):
-        print('write')
-        with open(self.log_file_path, 'w') as log_file:
+        with open(self.log_file_path, 'w', encoding='utf-8') as log_file:
             log_file.write('Files successfully replaced:\n\n')
             if len(self.tracks_in_success) > 0:
                 for old_path, artist, title, new_path in self.tracks_in_success:
