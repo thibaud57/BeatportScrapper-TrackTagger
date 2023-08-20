@@ -7,10 +7,6 @@ def get_user_input():
             print('Invalid input. Please enter Y or N.')
 
 
-def clean_string(s):
-    return s.replace('_', ' ')
-
-
 def clean_filename(filename):
     invalid_chars = ['<', '>', ':', '"', '/', '\\', '|', '?', '*']
     for char in invalid_chars:

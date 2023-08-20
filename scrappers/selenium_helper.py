@@ -1,28 +1,24 @@
 import json
-from urllib.parse import quote_plus
 
 import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 
-from constants import MAX_RETRIES, SCRIPT_ID, BEATPORT_SEARCH_URL, USER_AGENT, CHROME_DRIVER
+from constants import MAX_RETRIES, SCRIPT_ID, USER_AGENT, CHROME_DRIVER
 from enums import StatusCode
-from utils.utils import clean_string
 
 
 class SeleniumHelper:
     def __init__(self):
         service = Service(executable_path=CHROME_DRIVER)
         options = webdriver.ChromeOptions()
+        options.add_argument('--headless')
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
         self.driver = webdriver.Chrome(service=service, options=options)
 
-    def search_track(self, artist, title):
-        artist = clean_string(artist)
-        title = clean_string(title)
-
-        print(f'\nSearching track: {artist} - {title}')
-        search_url = f"{BEATPORT_SEARCH_URL + quote_plus(artist + ' ' + title)}"
+    def search_track(self, search_url):
         headers = {'User-Agent': USER_AGENT}
 
         for _ in range(MAX_RETRIES):
@@ -44,11 +40,19 @@ class SeleniumHelper:
         return None
 
     def crawler(self, search_url):
-        self.driver.get(search_url)
-        soup = BeautifulSoup(self.driver.page_source, 'html.parser')
-        script = soup.find('script', {'id': SCRIPT_ID})
-        data = json.loads(script.string)
-        return data
+        try:
+            self.driver.get(search_url)
+            soup = BeautifulSoup(self.driver.page_source, 'html.parser')
+            script = soup.find('script', {'id': SCRIPT_ID})
+
+            if not script:
+                print(f"Script with ID {SCRIPT_ID} not found on {search_url}")
+                return None
+
+            return json.loads(script.string)
+        except Exception as e:
+            print(f"Error while crawling {search_url}: {e}")
+            return None
 
     def close(self):
         self.driver.quit()

@@ -72,21 +72,17 @@ class TrackMatcher:
             return original_date.strftime('%Y-%m-%d')
         return ''
 
-
     @staticmethod
     def find_best_match(artist, title, json_data_list):
-        csv_artist = artist.lower().replace('_', ' ')
-        csv_title = title.lower().replace('_', ' ')
-
-        if csv_title.find('(') == -1 and csv_title.find(')') == -1:
-            csv_title += ORIGINAL_MIX
+        if title.find('(') == -1 and title.find(')') == -1:
+            title += ORIGINAL_MIX
 
         max_score = -1
         best_match = None
 
         for json_data in json_data_list:
-            artist_score = fuzz.token_set_ratio(csv_artist, json_data[TrackInfo.ARTISTS.value].lower())
-            title_score = fuzz.token_set_ratio(csv_title, json_data[TrackInfo.TITLE.value].lower())
+            artist_score = fuzz.token_set_ratio(artist, json_data[TrackInfo.ARTISTS.value].lower())
+            title_score = fuzz.token_set_ratio(title, json_data[TrackInfo.TITLE.value].lower())
 
             if artist_score >= MATCHING_SCORE_LIMIT and title_score >= MATCHING_SCORE_LIMIT:
                 total_score = artist_score + title_score
