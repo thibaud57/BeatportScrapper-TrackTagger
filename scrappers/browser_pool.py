@@ -12,9 +12,9 @@ class BrowserPool:
         for _ in range(size):
             service = Service(executable_path=CHROME_DRIVER)
             options = webdriver.ChromeOptions()
-            # options.add_argument('--headless')
-            # options.add_argument('--no-sandbox')
-            # options.add_argument('--disable-dev-shm-usage')
+            options.add_argument('--headless')
+            options.add_argument('--no-sandbox')
+            options.add_argument('--disable-dev-shm-usage')
             browser = webdriver.Chrome(service=service, options=options)
             self._pool.put(browser)
 
