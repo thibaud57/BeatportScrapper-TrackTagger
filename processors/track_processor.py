@@ -45,7 +45,7 @@ class TrackProcessor:
                 best_match, best_score = self.track_matcher.find_best_match(artist.lower(), title.lower(), track_info_list)
 
                 if best_match is None:
-                    print('No best match found')
+                    print(f'No best match found for: {artist} - {title}')
                 else:
                     if best_score >= MATCHING_SCORE_LIMIT or get_user_input(best_match, best_score, artist, title) == VALIDATE_KEY:
                         manager = TrackManager(file_path, self.metadata_manager)
