@@ -2,7 +2,7 @@ from datetime import datetime
 
 from fuzzywuzzy import fuzz
 
-from constants import ORIGINAL_MIX, DATE_FORMAT, MATCHING_SCORE_LIMIT
+from constants import ORIGINAL_MIX, DATE_FORMAT, MATCHING_SCORE_LIMIT, ARTIST_SCORE_LIMIT, TITLE_SCORE_LIMIT
 from enums import ArtistType, TrackInfo, BeatportField
 
 
@@ -81,10 +81,15 @@ class TrackMatcher:
         best_match = None
 
         for json_data in json_data_list:
-            artist_score = fuzz.token_set_ratio(artist, json_data[TrackInfo.ARTISTS.value].lower())
-            title_score = fuzz.token_set_ratio(title, json_data[TrackInfo.TITLE.value].lower())
+            artist_score = fuzz.ratio(artist, json_data[TrackInfo.ARTISTS.value].lower())
+            title_score = fuzz.ratio(title, json_data[TrackInfo.TITLE.value].lower())
 
-            if artist_score >= MATCHING_SCORE_LIMIT and title_score >= MATCHING_SCORE_LIMIT:
+            artist_tokens_diff = len(json_data[TrackInfo.ARTISTS.value].lower().split()) - len(artist.split())
+            title_tokens_diff = len(json_data[TrackInfo.TITLE.value].lower().split()) - len(title.split())
+            artist_score -= 10 * artist_tokens_diff
+            title_score -= 10 * title_tokens_diff
+
+            if artist_score >= ARTIST_SCORE_LIMIT and title_score >= TITLE_SCORE_LIMIT:
                 total_score = artist_score + title_score
 
                 if total_score > max_score:

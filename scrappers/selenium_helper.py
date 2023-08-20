@@ -2,21 +2,14 @@ import json
 
 import requests
 from bs4 import BeautifulSoup
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
 
-from constants import MAX_RETRIES, SCRIPT_ID, USER_AGENT, CHROME_DRIVER
+from constants import MAX_RETRIES, SCRIPT_ID, USER_AGENT
 from enums import StatusCode
 
 
 class SeleniumHelper:
-    def __init__(self):
-        service = Service(executable_path=CHROME_DRIVER)
-        options = webdriver.ChromeOptions()
-        options.add_argument('--headless')
-        options.add_argument('--no-sandbox')
-        options.add_argument('--disable-dev-shm-usage')
-        self.driver = webdriver.Chrome(service=service, options=options)
+    def __init__(self, browser):
+        self.driver = browser
 
     def search_track(self, search_url):
         headers = {'User-Agent': USER_AGENT}

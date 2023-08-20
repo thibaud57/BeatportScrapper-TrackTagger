@@ -14,7 +14,6 @@ class TrackManager:
         self.metadata_manager = metadata_manager
 
     def _rename_track(self):
-        print('Rename track')
         audio = EasyID3(self.file_path)
 
         artist = clean_filename(', '.join(audio.get(ID3Metadata.ARTIST.value, [])))
@@ -26,7 +25,6 @@ class TrackManager:
         self.file_path = new_file_path
 
     def _move_track_to_done_folder(self):
-        print('Moving file to final folder')
         directory = os.path.dirname(self.file_path)
         done_folder_path = os.path.join(directory, DONE_FOLDER_NAME)
 

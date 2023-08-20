@@ -6,9 +6,12 @@ CHROME_DRIVER = './chromedriver.exe'
 ORIGINAL_MIX = ' (original mix)'
 DATE_FORMAT = '%Y-%m-%dT%H:%M:%S'
 VALIDATE_KEY = 'y'
+THREADS_NUMBER = 3
 DONE_FOLDER_NAME = 'done'  # Can be replaced with the desired folder name
 TRACKS_FILE_PATH = 'D:\Rename\\'  # Replace with your preferred file path
 MATCHING_SCORE_LIMIT = 70
+ARTIST_SCORE_LIMIT = 70
+TITLE_SCORE_LIMIT = 70
 '''
 Determines the threshold for matching accuracy. 
 A value of 0 makes the matching algorithm very lenient, allowing almost any result to be considered a match. 

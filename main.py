@@ -1,5 +1,5 @@
 from loggers import SuccessLog
-from processors.track_processor import TrackProcessor
+from processors import TrackProcessor
 
 if __name__ == "__main__":
     processor = TrackProcessor()

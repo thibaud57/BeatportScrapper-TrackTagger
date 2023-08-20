@@ -17,7 +17,6 @@ class MetadataManager:
         return artist, title
 
     def update_metadata(self, file_path, track):
-        print('Update metadata')
         audio = EasyID3(file_path)
 
         try:
@@ -41,7 +40,6 @@ class MetadataManager:
 
     @staticmethod
     def delete_metadata(file_path):
-        print('Delete metadata')
         if not os.path.exists(file_path):
             raise FileNotFoundError(f'File does not exist: {file_path}')
         audio = EasyID3(file_path)
@@ -50,7 +48,6 @@ class MetadataManager:
 
     @staticmethod
     def _update_artwork(file_path, artwork_url):
-        print('Update artwork')
         audio = MP3(file_path, ID3=ID3)
 
         try:
