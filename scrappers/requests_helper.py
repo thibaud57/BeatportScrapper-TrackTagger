@@ -7,23 +7,30 @@ from enums import StatusCode
 
 
 class RequestsHelper:
+    def __init__(self):
+        self.session = requests.Session()
+        self.headers = {'User-Agent': USER_AGENT}
+
     def search_track(self, search_url):
-        headers = {'User-Agent': USER_AGENT}
-
         for _ in range(MAX_RETRIES):
-            response = requests.get(search_url, headers=headers)
-            print(f'With search url: {search_url} with status: {response.status_code}')
+            try:
+                response = self.session.get(search_url, headers=self.headers)
+                print(f'With search url: {search_url} with status: {response.status_code}')
 
-            if response.status_code == StatusCode.SUCCESS.value:
-                return self.crawler(response.content)
+                if response.status_code == StatusCode.SUCCESS.value:
+                    return self.crawler(response.content)
 
-            elif response.status_code == StatusCode.FORBIDDEN.value:
-                print('Received a 403 status code. Retrying...')
+                elif response.status_code == StatusCode.FORBIDDEN.value:
+                    print('Received a 403 status code. Retrying...')
+                    continue
+
+                else:
+                    print(f'Failed to fetch the page. Status code: {response.status_code}')
+                    return None
+
+            except requests.RequestException as e:
+                print(f"Request error: {e}")
                 continue
-
-            else:
-                print(f'Failed to fetch the page. Status code: {response.status_code}')
-                return None
 
         print('Max retries reached. Exiting.')
         return None
@@ -42,3 +49,6 @@ class RequestsHelper:
         except Exception as e:
             print(f"Error while parsing content: {e}")
             return None
+
+    def close(self):
+        self.session.close()
