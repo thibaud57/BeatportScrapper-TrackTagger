@@ -62,10 +62,10 @@ class TrackProcessor:
 
     def show_failure(self):
         for artist, title in self.tracks_in_failure:
-            self.logger.warning(f'\n Tracks in failure: \nNo best match found for: {artist} - {title}')
+            self.logger.warning(f'Tracks in failure: \nNo best match found for: {artist} - {title}')
 
     def confirm_and_process_tracks(self):
         for best_match, best_score, file_path, artist, title in self.tracks_to_confirm:
-            self.logger.info('\n Tracks to confirm:')
+            self.logger.info('Tracks to confirm:')
             if get_user_input(best_match, artist, title) == VALIDATE_KEY:
                 self.process_track(best_match, file_path, artist, title)

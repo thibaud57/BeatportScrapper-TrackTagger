@@ -10,7 +10,10 @@ if __name__ == "__main__":
     except Exception as e:
         logger.error(f'An error occurred: {e}')
     finally:
-        success_log = SuccessLog(processor.tracks_in_success, processor.tracks_file_path)
-        logger.info('\nWriting logs')
-        success_log.write_success_log()
-        logger.info('\n###END###')
+        if len(processor.tracks_in_success) > 0:
+            success_log = SuccessLog(processor.tracks_in_success, processor.tracks_file_path)
+            logger.info('Writing logs')
+            success_log.write_success_log()
+        else:
+            logger.warning('No tracks to process !')
+        logger.info('###END###')
