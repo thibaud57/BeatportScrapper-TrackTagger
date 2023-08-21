@@ -2,7 +2,7 @@ MAX_RETRIES = 3
 SCRIPT_ID = '__NEXT_DATA__'
 BEATPORT_SEARCH_URL = 'https://www.beatport.com/search?q='
 USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
-ORIGINAL_MIX = ' (original mix)'
+ORIGINAL_MIX = ' (Original mix)'
 DATE_FORMAT = '%Y-%m-%dT%H:%M:%S'
 INVALID_FILENAME_CHARS = ['<', '>', ':', '"', '/', '\\', '|', '?', '*']
 VALIDATE_KEY = 'y'
@@ -10,8 +10,8 @@ THREADS_NUMBER = 5
 DONE_FOLDER_NAME = 'done'  # Can be replaced with the desired folder name
 TRACKS_FILE_PATH = 'D:\Rename\\'  # Replace with your preferred file path
 MATCHING_SCORE_LIMIT = 70
-ARTIST_SCORE_LIMIT = 50
-TITLE_SCORE_LIMIT = 50
+ARTIST_SCORE_LIMIT = 70
+TITLE_SCORE_LIMIT = 70
 '''
 Determines the threshold for matching accuracy. 
 A value of 0 makes the matching algorithm very lenient, allowing almost any result to be considered a match. 

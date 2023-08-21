@@ -4,7 +4,7 @@ from typing import re
 from fuzzywuzzy import fuzz
 
 from constants import ORIGINAL_MIX, DATE_FORMAT, ARTIST_SCORE_LIMIT, TITLE_SCORE_LIMIT
-from enums import ArtistType, TrackInfo, BeatportField
+from enums import ArtistType, TrackInfo, BeatportField, TitleType
 
 
 class TrackMatcher:
@@ -86,6 +86,9 @@ class TrackMatcher:
             title_tokens_diff = len(json_data[TrackInfo.TITLE.value].lower().split()) - len(title.split())
             artist_score -= 10 * artist_tokens_diff
             title_score -= 10 * title_tokens_diff
+
+            if TitleType.REMIX.value.lower() in title and TitleType.REMIX.value.lower() not in json_data[TrackInfo.TITLE.value].lower():
+                continue
 
             if artist_score >= ARTIST_SCORE_LIMIT and title_score >= TITLE_SCORE_LIMIT:
                 total_score = artist_score + title_score
