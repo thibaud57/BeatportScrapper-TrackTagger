@@ -1,4 +1,5 @@
 import os
+import platform
 
 from constants import DONE_FOLDER_NAME
 
@@ -19,3 +20,14 @@ class SuccessLog:
                     log_file.write(f'Old path: {old_path}\n')
                     log_file.write(f'With track: {artist} - {title}\n')
                     log_file.write(f'Result is: {new_path}\n\n')
+
+    def open_log_file(self):
+        system_name = platform.system()
+        if system_name == "Windows":
+            os.startfile(self.log_file_path)
+        elif system_name == "Darwin":
+            os.system(f'open "{self.log_file_path}"')
+        elif system_name == "Linux":
+            os.system(f'xdg-open "{self.log_file_path}"')
+        else:
+            print(f"Sorry, your system {system_name} is not supported right now.")

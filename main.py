@@ -14,6 +14,7 @@ if __name__ == "__main__":
             success_log = SuccessLog(processor.tracks_in_success, processor.tracks_file_path)
             logger.info('Writing logs')
             success_log.write_success_log()
+            success_log.open_log_file()
         else:
             logger.warning('No tracks to process !')
         logger.info('###END###')
