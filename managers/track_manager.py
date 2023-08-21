@@ -5,11 +5,13 @@ from mutagen.easyid3 import EasyID3
 
 from constants import DONE_FOLDER_NAME
 from enums import ID3Metadata, MusicFormat
-from utils.utils import clean_filename
+from loggers import AppLogger
+from utils import clean_filename
 
 
 class TrackManager:
     def __init__(self, file_path, metadata_manager):
+        self.logger = AppLogger().get_logger()
         self.file_path = file_path
         self.metadata_manager = metadata_manager
 
@@ -44,5 +46,5 @@ class TrackManager:
             self._rename_track()
             return self._move_track_to_done_folder()  # Workflow completed successfully
         except FileNotFoundError:
-            print(f'File not found: {self.file_path}')
+            self.logger.error(f'File not found: {self.file_path}')
             return None  # An error occurred during the workflow

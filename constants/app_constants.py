@@ -4,6 +4,7 @@ BEATPORT_SEARCH_URL = 'https://www.beatport.com/search?q='
 USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
 ORIGINAL_MIX = ' (original mix)'
 DATE_FORMAT = '%Y-%m-%dT%H:%M:%S'
+INVALID_CHARS = ['<', '>', ':', '"', '/', '\\', '|', '?', '*']
 VALIDATE_KEY = 'y'
 THREADS_NUMBER = 5
 DONE_FOLDER_NAME = 'done'  # Can be replaced with the desired folder name

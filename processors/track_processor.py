@@ -1,11 +1,11 @@
 import os
-import logging
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from urllib.parse import quote_plus
 
 from constants import TRACKS_FILE_PATH, MATCHING_SCORE_LIMIT, VALIDATE_KEY, BEATPORT_SEARCH_URL, THREADS_NUMBER
 from enums import MusicFormat
+from loggers import AppLogger
 from managers import MetadataManager, TrackManager
 from scrappers import TrackMatcher, RequestsHelper
 from utils import get_user_input
@@ -13,6 +13,7 @@ from utils import get_user_input
 
 class TrackProcessor:
     def __init__(self):
+        self.logger = AppLogger().get_logger()
         self.helper = RequestsHelper()
         self.track_matcher = TrackMatcher()
         self.metadata_manager = MetadataManager()
@@ -61,11 +62,10 @@ class TrackProcessor:
 
     def show_failure(self):
         for artist, title in self.tracks_in_failure:
-            print('\n Tracks in failure:')
-            logger.warning(f'No best match found for: {artist} - {title}')
+            self.logger.warning(f'\n Tracks in failure: \nNo best match found for: {artist} - {title}')
 
     def confirm_and_process_tracks(self):
         for best_match, best_score, file_path, artist, title in self.tracks_to_confirm:
-            print('\n Tracks to confirm:')
-            if get_user_input(best_match, best_score, artist, title) == VALIDATE_KEY:
+            self.logger.info('\n Tracks to confirm:')
+            if get_user_input(best_match, artist, title) == VALIDATE_KEY:
                 self.process_track(best_match, file_path, artist, title)
