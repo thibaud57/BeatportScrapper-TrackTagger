@@ -25,7 +25,7 @@ class TrackProcessor:
         with ThreadPoolExecutor(max_workers=THREADS_NUMBER) as executor:
             executor.map(self.process_file, urls_datas)
         self.show_failure()
-        self.confirm_tracks()
+        self.confirm_and_process_tracks()
 
     def build_search_urls(self):
         urls = []
@@ -50,21 +50,21 @@ class TrackProcessor:
             elif best_score <= MATCHING_SCORE_LIMIT:
                 self.tracks_to_confirm.append((best_match, best_score, file_path, artist, title))
             else:
-                manager = TrackManager(file_path, self.metadata_manager)
-                new_file_path = manager.run_track_processing_workflow(best_match)
-                if new_file_path:
-                    self.tracks_in_success.append((file_path, artist, title, new_file_path))
+                self.process_track(best_match, file_path, artist, title)
+
+    def process_track(self, best_match, file_path, artist, title):
+        manager = TrackManager(file_path, self.metadata_manager)
+        new_file_path = manager.run_track_processing_workflow(best_match)
+        if new_file_path:
+            self.tracks_in_success.append((file_path, artist, title, new_file_path))
 
     def show_failure(self):
         for artist, title in self.tracks_in_failure:
             print('\n Tracks in failure:')
             print(f'No best match found for: {artist} - {title}')
 
-    def confirm_tracks(self):
+    def confirm_and_process_tracks(self):
         for best_match, best_score, file_path, artist, title in self.tracks_to_confirm:
             print('\n Tracks to confirm:')
             if get_user_input(best_match, best_score, artist, title) == VALIDATE_KEY:
-                manager = TrackManager(file_path, self.metadata_manager)
-                new_file_path = manager.run_track_processing_workflow(best_match)
-                if new_file_path:
-                    self.tracks_in_success.append((file_path, artist, title, new_file_path))
+                self.process_track(best_match, file_path, artist, title)
