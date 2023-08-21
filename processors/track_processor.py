@@ -1,4 +1,5 @@
 import os
+import logging
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from urllib.parse import quote_plus
@@ -61,7 +62,7 @@ class TrackProcessor:
     def show_failure(self):
         for artist, title in self.tracks_in_failure:
             print('\n Tracks in failure:')
-            print(f'No best match found for: {artist} - {title}')
+            logger.warning(f'No best match found for: {artist} - {title}')
 
     def confirm_and_process_tracks(self):
         for best_match, best_score, file_path, artist, title in self.tracks_to_confirm:
