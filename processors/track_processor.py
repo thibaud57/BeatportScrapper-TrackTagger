@@ -8,7 +8,7 @@ from enums import MusicFormat
 from loggers import AppLogger
 from managers import MetadataManager, TrackManager
 from scrappers import TrackMatcher, RequestsHelper
-from utils import get_user_input
+from utils import get_user_input, add_original_name_to_title_if_needed
 
 
 class TrackProcessor:
@@ -37,7 +37,7 @@ class TrackProcessor:
             file_path = self.tracks_file_path / str(file)
             artist, title = self.metadata_manager.extract_metadata(file_path)
             search_url = f"{BEATPORT_SEARCH_URL + quote_plus(artist + ' ' + title)}"
-            urls.append((search_url, file_path, artist, title))
+            urls.append((search_url, file_path, artist, add_original_name_to_title_if_needed(title)))
         return urls
 
     def process_file(self, data):

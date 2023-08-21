@@ -6,13 +6,14 @@ from mutagen.id3 import ID3, APIC
 from mutagen.mp3 import MP3
 
 from enums import ID3Metadata, TrackInfo
+from utils import clean_artist
 
 
 class MetadataManager:
     @staticmethod
     def extract_metadata(file_path):
         audio = EasyID3(file_path)
-        artist = audio.get(ID3Metadata.ARTIST.value, [None])[0]
+        artist = clean_artist(audio.get(ID3Metadata.ARTIST.value, [None])[0])
         title = audio.get(ID3Metadata.TITLE.value, [None])[0]
         return artist, title
 

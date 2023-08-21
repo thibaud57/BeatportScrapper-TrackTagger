@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import re
 
 from fuzzywuzzy import fuzz
 
@@ -74,9 +75,6 @@ class TrackMatcher:
 
     @staticmethod
     def find_best_match(artist, title, json_data_list):
-        if title.find('(') == -1 and title.find(')') == -1:
-            title += ORIGINAL_MIX
-
         max_score = -1
         best_match = None
 

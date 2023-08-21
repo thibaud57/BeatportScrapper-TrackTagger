@@ -1,6 +1,6 @@
 import time
 
-from constants import INVALID_CHARS
+from constants import INVALID_FILENAME_CHARS, ORIGINAL_MIX
 from enums import TrackInfo
 from loggers import AppLogger
 
@@ -18,6 +18,20 @@ def get_user_input(best_match, artist, title):
 
 
 def clean_filename(filename):
-    for char in INVALID_CHARS:
+    for char in INVALID_FILENAME_CHARS:
         filename = filename.replace(char, '')
     return filename
+
+
+def clean_artist(artist):
+    if ';' in artist:
+        artists = artist.split(';')
+        artists = [a.strip() for a in artists if a.strip()]
+        artist = ', '.join(artists)
+    return artist
+
+
+def add_original_name_to_title_if_needed(title):
+    if title.find('(') == -1 and title.find(')') == -1:
+        title += ORIGINAL_MIX
+    return title
