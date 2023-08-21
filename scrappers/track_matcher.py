@@ -2,7 +2,7 @@ from datetime import datetime
 
 from fuzzywuzzy import fuzz
 
-from constants import ORIGINAL_MIX, DATE_FORMAT, MATCHING_SCORE_LIMIT, ARTIST_SCORE_LIMIT, TITLE_SCORE_LIMIT
+from constants import ORIGINAL_MIX, DATE_FORMAT, ARTIST_SCORE_LIMIT, TITLE_SCORE_LIMIT
 from enums import ArtistType, TrackInfo, BeatportField
 
 
