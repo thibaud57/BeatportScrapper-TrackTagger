@@ -23,13 +23,13 @@ class TrackProcessor:
         self.tracks_in_failure = []
 
     def run(self):
-        urls_datas = self.build_search_urls()
+        urls_datas = self._build_search_urls()
         with ThreadPoolExecutor(max_workers=THREADS_NUMBER) as executor:
-            executor.map(self.process_file, urls_datas)
-        self.show_failure()
-        self.confirm_and_process_tracks()
+            executor.map(self._process_file, urls_datas)
+        self._show_failure()
+        self._confirm_and_process_tracks()
 
-    def build_search_urls(self):
+    def _build_search_urls(self):
         urls = []
         files = [f for f in os.listdir(self.tracks_file_path) if
                  os.path.isfile(os.path.join(self.tracks_file_path, f)) and f.endswith(MusicFormat.MP3.value)]
@@ -40,7 +40,7 @@ class TrackProcessor:
             urls.append((search_url, file_path, artist, add_original_name_to_title_if_needed(title)))
         return urls
 
-    def process_file(self, data):
+    def _process_file(self, data):
         url, file_path, artist, title = data
         data = self.helper.search_track(url)
 
@@ -52,20 +52,20 @@ class TrackProcessor:
             elif best_score <= MATCHING_SCORE_LIMIT:
                 self.tracks_to_confirm.append((best_match, best_score, file_path, artist, title))
             else:
-                self.process_track(best_match, file_path, artist, title)
+                self._process_track(best_match, file_path, artist, title)
 
-    def process_track(self, best_match, file_path, artist, title):
+    def _process_track(self, best_match, file_path, artist, title):
         manager = TrackManager(file_path, self.metadata_manager)
         new_file_path = manager.run_track_processing_workflow(best_match)
         if new_file_path:
             self.tracks_in_success.append((file_path, artist, title, new_file_path))
 
-    def show_failure(self):
+    def _show_failure(self):
         for artist, title in self.tracks_in_failure:
             self.logger.warning(f'Tracks in failure: \nNo best match found for: {artist} - {title}')
 
-    def confirm_and_process_tracks(self):
+    def _confirm_and_process_tracks(self):
         for best_match, best_score, file_path, artist, title in self.tracks_to_confirm:
             self.logger.info('Tracks to confirm:')
             if get_user_input(best_match, artist, title) == VALIDATE_KEY:
-                self.process_track(best_match, file_path, artist, title)
+                self._process_track(best_match, file_path, artist, title)

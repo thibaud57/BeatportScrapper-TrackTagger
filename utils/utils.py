@@ -1,7 +1,7 @@
 import time
 
-from constants import INVALID_FILENAME_CHARS, ORIGINAL_MIX
-from enums import TrackInfo
+from constants import INVALID_FILENAME_CHARS
+from enums import TrackInfo, TitleType
 from loggers import AppLogger
 
 
@@ -33,5 +33,5 @@ def clean_artist(artist):
 
 def add_original_name_to_title_if_needed(title):
     if title.find('(') == -1 and title.find(')') == -1:
-        title += ORIGINAL_MIX
+        title += f'({TitleType.ORIGINAL_MIX.value})'
     return title

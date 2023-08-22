@@ -1,9 +1,8 @@
 from datetime import datetime
-from typing import re
 
 from fuzzywuzzy import fuzz
 
-from constants import ORIGINAL_MIX, DATE_FORMAT, ARTIST_SCORE_LIMIT, TITLE_SCORE_LIMIT
+from constants import DATE_FORMAT, ARTIST_SCORE_LIMIT, TITLE_SCORE_LIMIT
 from enums import ArtistType, TrackInfo, BeatportField, TitleType
 
 
@@ -42,6 +41,40 @@ class TrackMatcher:
         }
 
     @staticmethod
+    def find_best_match(artist, title, json_data_list):
+        max_score = -1
+        best_match = None
+
+        for json_data in json_data_list:
+            artist_score = fuzz.token_sort_ratio(artist, json_data[TrackInfo.ARTISTS.value].lower())
+            title_score = fuzz.ratio(title, json_data[TrackInfo.TITLE.value].lower())
+
+            artist_tokens_diff = len(json_data[TrackInfo.ARTISTS.value].lower().split()) - len(artist.split())
+            title_tokens_diff = len(json_data[TrackInfo.TITLE.value].lower().split()) - len(title.split())
+            artist_score -= 10 * artist_tokens_diff
+            title_score -= 10 * title_tokens_diff
+
+            if TitleType.REMIX.value.lower() in title and TitleType.REMIX.value.lower() not in json_data[
+                TrackInfo.TITLE.value].lower():
+                continue
+
+            print("aaaaaaaaaaa")
+            print(artist, title)
+            print(json_data[TrackInfo.ARTISTS.value].lower(), json_data[TrackInfo.TITLE.value].lower())
+            print(artist_score, title_score)
+            if artist_score >= ARTIST_SCORE_LIMIT and title_score >= TITLE_SCORE_LIMIT:
+                total_score = artist_score + title_score
+
+                if total_score > max_score:
+                    max_score = total_score
+                    best_match = json_data
+
+        if best_match is not None:
+            return best_match, max_score / 2
+
+        return None, -1
+
+    @staticmethod
     def _extract_artists(track):
         artists = track.get(BeatportField.ARTISTS.value, [])
         filtered_artists = [
@@ -72,32 +105,3 @@ class TrackMatcher:
                 return str(original_date.year)
             return original_date.strftime('%Y-%m-%d')
         return ''
-
-    @staticmethod
-    def find_best_match(artist, title, json_data_list):
-        max_score = -1
-        best_match = None
-
-        for json_data in json_data_list:
-            artist_score = fuzz.token_sort_ratio(artist, json_data[TrackInfo.ARTISTS.value].lower())
-            title_score = fuzz.ratio(title, json_data[TrackInfo.TITLE.value].lower())
-
-            artist_tokens_diff = len(json_data[TrackInfo.ARTISTS.value].lower().split()) - len(artist.split())
-            title_tokens_diff = len(json_data[TrackInfo.TITLE.value].lower().split()) - len(title.split())
-            artist_score -= 10 * artist_tokens_diff
-            title_score -= 10 * title_tokens_diff
-
-            if TitleType.REMIX.value.lower() in title and TitleType.REMIX.value.lower() not in json_data[TrackInfo.TITLE.value].lower():
-                continue
-
-            if artist_score >= ARTIST_SCORE_LIMIT and title_score >= TITLE_SCORE_LIMIT:
-                total_score = artist_score + title_score
-
-                if total_score > max_score:
-                    max_score = total_score
-                    best_match = json_data
-
-        if best_match is not None:
-            return best_match, max_score / 2
-
-        return None, -1

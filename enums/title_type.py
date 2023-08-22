@@ -2,5 +2,5 @@ from enum import Enum
 
 
 class TitleType(Enum):
-    ORIGINAL = 'Original'
+    ORIGINAL_MIX = 'Original Mix'
     REMIX = 'Remix'
