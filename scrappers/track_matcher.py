@@ -58,10 +58,6 @@ class TrackMatcher:
                 TrackInfo.TITLE.value].lower():
                 continue
 
-            print("aaaaaaaaaaa")
-            print(artist, title)
-            print(json_data[TrackInfo.ARTISTS.value].lower(), json_data[TrackInfo.TITLE.value].lower())
-            print(artist_score, title_score)
             if artist_score >= ARTIST_SCORE_LIMIT and title_score >= TITLE_SCORE_LIMIT:
                 total_score = artist_score + title_score
 
