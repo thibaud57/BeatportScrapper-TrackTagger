@@ -79,7 +79,7 @@ class TrackMatcher:
         best_match = None
 
         for json_data in json_data_list:
-            artist_score = fuzz.ratio(artist, json_data[TrackInfo.ARTISTS.value].lower())
+            artist_score = fuzz.token_sort_ratio(artist, json_data[TrackInfo.ARTISTS.value].lower())
             title_score = fuzz.ratio(title, json_data[TrackInfo.TITLE.value].lower())
 
             artist_tokens_diff = len(json_data[TrackInfo.ARTISTS.value].lower().split()) - len(artist.split())
