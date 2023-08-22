@@ -19,8 +19,8 @@ class SuccessLog:
                 if len(self.tracks_in_success) > 0:
                     for old_path, artist, title, new_file_path in self.tracks_in_success:
                         log_file.write(f'Old path: {old_path}\n')
-                        log_file.write(f'With track: {artist} - {title}\n')
-                        log_file.write(f'Result is: {new_file_path}\n\n')
+                        log_file.write(f'Old track: {artist} - {title}\n')
+                        log_file.write(f'New track: {new_file_path}\n\n')
         except IOError as e:
             print(f"Erreur while writing succes log : {e}")
 

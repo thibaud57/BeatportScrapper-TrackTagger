@@ -10,35 +10,16 @@ class TrackMatcher:
     def parse_track_info(self, data):
         if data is None:
             return None
-
         if not isinstance(data, dict):
             raise TypeError('Data must be a dict.')
-
         tracks = data.get('props', {}).get('pageProps', {}).get('dehydratedState', {}).get('queries', [{}])[0].get(
             'state',
             {}).get(
             'data', {}).get('tracks', {}).get('data', [])
-
         if tracks:
             return [self._extract_track_info(track) for track in tracks]
         else:
             return None
-
-    def _extract_track_info(self, track):
-        return {
-            TrackInfo.ARTISTS.value: self._extract_artists(track),
-            TrackInfo.TITLE.value: self._extract_title(track),
-            TrackInfo.GENRE.value: track.get(BeatportField.GENRE.value, {})[0].get(BeatportField.GENRE_NAME.value, ''),
-            TrackInfo.LABEL.value: track.get(BeatportField.LABEL.value, {}).get(BeatportField.LABEL_NAME.value, ''),
-            TrackInfo.DATE.value: self._extract_date(True, track),
-            TrackInfo.ORIGINAL_DATE.value: self._extract_date(False, track),
-            TrackInfo.ALBUM.value: track.get(BeatportField.RELEASE.value, {}).get(BeatportField.RELEASE_NAME.value, ''),
-            TrackInfo.ARTWORK.value: track.get(BeatportField.RELEASE.value, {}).get(
-                BeatportField.RELEASE_IMAGE_URI.value, ''),
-            TrackInfo.TRACK_NUMBER.value: track.get(BeatportField.TRACK_NUMBER.value, 0),
-            TrackInfo.BPM.value: track.get(BeatportField.BPM.value, 0),
-            TrackInfo.ISRC.value: track.get(BeatportField.ISRC.value, ''),
-        }
 
     @staticmethod
     def find_best_match(artist, title, json_data_list):
@@ -46,13 +27,16 @@ class TrackMatcher:
         best_match = None
 
         for json_data in json_data_list:
-            artist_score = fuzz.token_sort_ratio(artist, json_data[TrackInfo.ARTISTS.value].lower())
+            if "," in artist or '&' in artist:
+                artist_score = fuzz.token_sort_ratio(artist, json_data[TrackInfo.ARTISTS.value].lower())
+            else:
+                artist_score = fuzz.ratio(artist, json_data[TrackInfo.ARTISTS.value].lower())
             title_score = fuzz.ratio(title, json_data[TrackInfo.TITLE.value].lower())
 
-            artist_tokens_diff = len(json_data[TrackInfo.ARTISTS.value].lower().split()) - len(artist.split())
-            title_tokens_diff = len(json_data[TrackInfo.TITLE.value].lower().split()) - len(title.split())
-            artist_score -= 10 * artist_tokens_diff
-            title_score -= 10 * title_tokens_diff
+            # artist_tokens_diff = len(json_data[TrackInfo.ARTISTS.value].lower().split()) - len(artist.split())
+            # title_tokens_diff = len(json_data[TrackInfo.TITLE.value].lower().split()) - len(title.split())
+            # artist_score -= artist_tokens_diff
+            # title_score -= title_tokens_diff
 
             if TitleType.REMIX.value.lower() in title and TitleType.REMIX.value.lower() not in json_data[
                 TrackInfo.TITLE.value].lower():
@@ -69,6 +53,22 @@ class TrackMatcher:
             return best_match, max_score / 2
 
         return None, -1
+
+    def _extract_track_info(self, track):
+        return {
+            TrackInfo.ARTISTS.value: self._extract_artists(track),
+            TrackInfo.TITLE.value: self._extract_title(track),
+            TrackInfo.GENRE.value: track.get(BeatportField.GENRE.value, {})[0].get(BeatportField.GENRE_NAME.value, ''),
+            TrackInfo.LABEL.value: track.get(BeatportField.LABEL.value, {}).get(BeatportField.LABEL_NAME.value, ''),
+            TrackInfo.DATE.value: self._extract_date(True, track),
+            TrackInfo.ORIGINAL_DATE.value: self._extract_date(False, track),
+            TrackInfo.ALBUM.value: track.get(BeatportField.RELEASE.value, {}).get(BeatportField.RELEASE_NAME.value, ''),
+            TrackInfo.ARTWORK.value: track.get(BeatportField.RELEASE.value, {}).get(
+                BeatportField.RELEASE_IMAGE_URI.value, ''),
+            TrackInfo.TRACK_NUMBER.value: track.get(BeatportField.TRACK_NUMBER.value, 0),
+            TrackInfo.BPM.value: track.get(BeatportField.BPM.value, 0),
+            TrackInfo.ISRC.value: track.get(BeatportField.ISRC.value, ''),
+        }
 
     @staticmethod
     def _extract_artists(track):
