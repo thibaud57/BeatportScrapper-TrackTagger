@@ -31,13 +31,16 @@ class TrackProcessor:
 
     def _build_search_urls(self):
         urls = []
-        files = [f for f in os.listdir(self.tracks_file_path) if
-                 os.path.isfile(os.path.join(self.tracks_file_path, f)) and f.endswith(MusicFormat.MP3.value)]
-        for file in files:
-            file_path = self.tracks_file_path / str(file)
-            artist, title = self.metadata_manager.extract_metadata(file_path)
-            search_url = f"{BEATPORT_SEARCH_URL + quote_plus(artist + ' ' + title)}"
-            urls.append((search_url, file_path, artist, add_original_name_to_title_if_needed(title)))
+        try:
+            files = [f for f in os.listdir(self.tracks_file_path) if
+                     os.path.isfile(os.path.join(self.tracks_file_path, f)) and f.endswith(MusicFormat.MP3.value)]
+            for file in files:
+                file_path = self.tracks_file_path / str(file)
+                artist, title = self.metadata_manager.extract_metadata(file_path)
+                search_url = f"{BEATPORT_SEARCH_URL + quote_plus(artist + ' ' + title)}"
+                urls.append((search_url, file_path, artist, add_original_name_to_title_if_needed(title)))
+        except IOError as e:
+            self.logger.error(f"Error while reading file : {e}")
         return urls
 
     def _process_file(self, data):

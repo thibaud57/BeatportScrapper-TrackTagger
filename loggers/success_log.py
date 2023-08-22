@@ -13,13 +13,16 @@ class SuccessLog:
             os.makedirs(self.done_folder_path)
 
     def write_success_log(self):
-        with open(self.log_file_path, 'w', encoding='utf-8') as log_file:
-            log_file.write('Files successfully replaced:\n\n')
-            if len(self.tracks_in_success) > 0:
-                for old_path, artist, title, new_path in self.tracks_in_success:
-                    log_file.write(f'Old path: {old_path}\n')
-                    log_file.write(f'With track: {artist} - {title}\n')
-                    log_file.write(f'Result is: {new_path}\n\n')
+        try:
+            with open(self.log_file_path, 'w', encoding='utf-8') as log_file:
+                log_file.write('Files successfully replaced:\n\n')
+                if len(self.tracks_in_success) > 0:
+                    for old_path, artist, title, new_file_path in self.tracks_in_success:
+                        log_file.write(f'Old path: {old_path}\n')
+                        log_file.write(f'With track: {artist} - {title}\n')
+                        log_file.write(f'Result is: {new_file_path}\n\n')
+        except IOError as e:
+            print(f"Erreur while writing succes log : {e}")
 
     def open_log_file(self):
         system_name = platform.system()

@@ -42,12 +42,14 @@ class RequestsHelper:
         try:
             soup = BeautifulSoup(content, 'html.parser')
             script = soup.find('script', {'id': SCRIPT_ID})
-
             if not script:
                 self.logger.warning(f"Script with ID {SCRIPT_ID} not found")
                 return None
-
-            return json.loads(script.string)
+            try:
+                return json.loads(script.string)
+            except json.JSONDecodeError:
+                self.logger.error("Error while loading json.")
+                return None
         except Exception as e:
             self.logger.error(f"Error while parsing content: {e}")
             return None

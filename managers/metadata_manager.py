@@ -6,10 +6,14 @@ from mutagen.id3 import ID3, APIC
 from mutagen.mp3 import MP3
 
 from enums import ID3Metadata, TrackInfo
+from loggers import AppLogger
 from utils import clean_artist
 
 
 class MetadataManager:
+    def __init__(self):
+        self.logger = AppLogger().get_logger()
+
     @staticmethod
     def extract_metadata(file_path):
         audio = EasyID3(file_path)
@@ -19,11 +23,23 @@ class MetadataManager:
 
     def update_metadata(self, file_path, track):
         audio = EasyID3(file_path)
-
         try:
             audio.add_tags()
         except Exception:
             pass
+        self._set_metadata_tags(audio, track)
+        audio.save()
+        self._set_artwork(file_path, track[TrackInfo.ARTWORK.value])
+
+    def delete_metadata(self, file_path):
+        if not os.path.exists(file_path):
+            self.logger.error(f'File does not exist: {file_path}')
+        audio = EasyID3(file_path)
+        audio.delete()
+        audio.save()
+
+    @staticmethod
+    def _set_metadata_tags(audio, track):
         audio[ID3Metadata.ARTIST.value] = track[TrackInfo.ARTISTS.value]
         audio[ID3Metadata.TITLE.value] = track[TrackInfo.TITLE.value]
         audio[ID3Metadata.ALBUM.value] = track[TrackInfo.ALBUM.value]
@@ -35,32 +51,15 @@ class MetadataManager:
         audio[ID3Metadata.BPM.value] = str(track[TrackInfo.BPM.value])
         audio[ID3Metadata.ISRC.value] = track[TrackInfo.ISRC.value]
 
-        audio.save()
-
-        self._update_artwork(file_path, track[TrackInfo.ARTWORK.value])
-
-    @staticmethod
-    def delete_metadata(file_path):
-        if not os.path.exists(file_path):
-            raise FileNotFoundError(f'File does not exist: {file_path}')
-        audio = EasyID3(file_path)
-        audio.delete()
-        audio.save()
-
-    @staticmethod
-    def _update_artwork(file_path, artwork_url):
+    def _set_artwork(self, file_path, artwork_url):
         audio = MP3(file_path, ID3=ID3)
-
-        try:
-            audio.add_tags()
-        except Exception:
-            pass
-
         if ID3Metadata.APIC.value in audio.tags:
-            del (audio.tags[ID3Metadata.APIC.value])
-
-        image_data = urlopen(artwork_url).read()
-
+            del audio.tags[ID3Metadata.APIC.value]
+        try:
+            image_data = urlopen(artwork_url).read()
+        except Exception as e:
+            self.logger.error(f"Error fetching artwork from URL: {e} \n For track: {file_path}")
+            return
         audio.tags.add(
             APIC(
                 encoding=3,  # utf-8
@@ -70,5 +69,4 @@ class MetadataManager:
                 data=image_data
             )
         )
-
         audio.save()
