@@ -15,6 +15,16 @@ class TrackManager:
         self.file_path = file_path
         self.metadata_manager = metadata_manager
 
+    def run_track_processing_workflow(self, track_matching):
+        try:
+            self.metadata_manager.delete_metadata(self.file_path)
+            self.metadata_manager.update_metadata(self.file_path, track_matching)
+            self._rename_track()
+            return self._move_track_to_done_folder()  # Workflow completed successfully
+        except FileNotFoundError:
+            self.logger.error(f'File not found: {self.file_path}')
+            return None  # An error occurred during the workflow
+
     def _rename_track(self):
         audio = EasyID3(self.file_path)
 
@@ -38,13 +48,3 @@ class TrackManager:
         shutil.move(self.file_path, new_file_path)
 
         return file_name
-
-    def run_track_processing_workflow(self, track_matching):
-        try:
-            self.metadata_manager.delete_metadata(self.file_path)
-            self.metadata_manager.update_metadata(self.file_path, track_matching)
-            self._rename_track()
-            return self._move_track_to_done_folder()  # Workflow completed successfully
-        except FileNotFoundError:
-            self.logger.error(f'File not found: {self.file_path}')
-            return None  # An error occurred during the workflow

@@ -1,20 +1,10 @@
-from loggers import SuccessLog, AppLogger
-from processors import TrackProcessor
+from managers import MenuManager
+
+
+def main():
+    menu_manager = MenuManager()
+    menu_manager.display_main_menu()
+
 
 if __name__ == "__main__":
-    logger = AppLogger().get_logger()
-    processor = TrackProcessor()
-    try:
-        logger.info('###START###')
-        processor.run()
-    except Exception as e:
-        logger.error(f'An error occurred: {e}')
-    finally:
-        if len(processor.tracks_in_success) > 0:
-            success_log = SuccessLog(processor.tracks_in_success, processor.tracks_file_path)
-            logger.info('Writing logs')
-            success_log.write_success_log()
-            success_log.open_log_file()
-        else:
-            logger.warning('No tracks to process !')
-        logger.info('###END###')
+    main()
