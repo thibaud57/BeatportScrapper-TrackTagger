@@ -21,12 +21,12 @@ pip install -r requirements.txt
 Inside the `constants` directory, you'll find the `app_constants.py` file. This file contains several constants that you
 can customize to your needs:
 
-- **SQLITE_DB_PATH**: The default location is 'F:\Bureau\vlc_media.db'. Update this to the path of your SQLite database
+- **SQLITE_DB_PATH**: The default location is <your_sql_db_path>. Update this to the path of your SQLite database
   file.
-- **ORIGINAL_TRACKS_FILE_PATH**: The default location is 'F:\Téléchargements\'. Update this to the directory where your
+- **ORIGINAL_TRACKS_FILE_PATH**: The default location is <your_original_tracks_folder>. Update this to the directory where your
   tracks are initially located before being moved by the playlist.  
   Note: Subfolders are supported for this feature.
-- **PROCESSING_TRACKS_FILE_PATH**: Default location is 'D:\Rename\'. Update this to the directory where your tracks are
+- **PROCESSING_TRACKS_FILE_PATH**: Default location is <your_final_tracks_folder>. Update this to the directory where your tracks are
   stored.  
   Note: Subfolders are not supported yet for this feature.
 - **DONE_FOLDER_NAME**: Default name is 'done'. Change this if you prefer a different name for your final folder.
@@ -73,7 +73,7 @@ Upon completion, a log file is generated in the `DONE_FOLDER_NAME` directory, de
 
 Note: The integrated algorithm evaluates the similarity between your music track and the results from Beatport to ensure
 accurate tagging. The `MATCHING_SCORE_LIMIT` constant lets you tweak the algorithm's strictness. If the algorithm
-identifies a near match, you'll be prompted to confirm the choice using the `Y` key.
+identifies a near match, you'll be prompted to confirm the choice using the `VALIDATE_KEY`.
 
 Upon completion, a log file is generated in the `DONE_FOLDER_NAME` directory, detailing the renamed music tracks.
 
