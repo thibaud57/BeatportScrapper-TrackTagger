@@ -45,7 +45,7 @@ class TrackProcessor:
                 search_url = f"{BEATPORT_SEARCH_URL + quote_plus(artist + ' ' + title)}"
                 urls.append((search_url, file_path, artist, add_original_name_to_title_if_needed(title)))
         except IOError as e:
-            self.logger.error(f"Error while reading file : {e}")
+            self.logger.error(f'Error while reading file : {e}')
         return urls
 
     def _process_file(self, data):
@@ -76,7 +76,9 @@ class TrackProcessor:
             self.logger.warning(failure_report)
 
     def _confirm_and_process_tracks(self):
-        for best_match, best_score, file_path, artist, title in self.tracks_to_confirm:
+        if self.tracks_to_confirm:
             self.logger.info('Tracks to confirm:')
-            if managers.MenuManager.confirmation_track_processor_menu(best_match, artist, title) == VALIDATE_KEY:
-                self._process_track(best_match, file_path, artist, title)
+            for best_match, best_score, file_path, artist, title in self.tracks_to_confirm:
+                if managers.MenuManager.confirmation_track_processor_menu(best_match, artist, title,
+                                                                          self.logger) == VALIDATE_KEY:
+                    self._process_track(best_match, file_path, artist, title)

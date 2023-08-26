@@ -58,7 +58,7 @@ class MetadataManager:
         try:
             image_data = urlopen(artwork_url).read()
         except Exception as e:
-            self.logger.error(f"Error fetching artwork from URL: {e} \n For track: {file_path}")
+            self.logger.error(f'Error fetching artwork from URL: {e} \n For track: {file_path}')
             return
         audio.tags.add(
             APIC(

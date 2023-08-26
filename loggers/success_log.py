@@ -3,6 +3,7 @@ import platform
 from pathlib import Path
 
 from constants import DONE_FOLDER_NAME, PROCESSING_TRACKS_FILE_PATH
+from enums import OperationSystemName
 
 
 class SuccessLog:
@@ -25,15 +26,15 @@ class SuccessLog:
                         log_file.write(f'Old track: {artist} - {title}\n')
                         log_file.write(f'New path:  {new_file_path}\n\n')
         except IOError as e:
-            print(f"Erreur while writing succes log : {e}")
+            print(f'Erreur while writing succes log : {e}')
 
     def open_log_file(self):
         system_name = platform.system()
-        if system_name == "Windows":
+        if system_name == OperationSystemName.WINDOWS:
             os.startfile(self.log_file_path)
-        elif system_name == "Darwin":
+        elif system_name == OperationSystemName.DARWIN:
             os.system(f'open "{self.log_file_path}"')
-        elif system_name == "Linux":
+        elif system_name == OperationSystemName.LINUX:
             os.system(f'xdg-open "{self.log_file_path}"')
         else:
-            print(f"Sorry, your system {system_name} is not supported right now.")
+            print(f'Sorry, your system {system_name} is not supported right now.')

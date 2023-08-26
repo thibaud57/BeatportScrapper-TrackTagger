@@ -32,7 +32,7 @@ class RequestsHelper:
                     return None
 
             except requests.RequestException as e:
-                self.logger.error(f"Request error: {e}")
+                self.logger.error(f'Request error: {e}')
                 continue
 
         self.logger.warning('Max retries reached. Exiting.')
@@ -43,15 +43,15 @@ class RequestsHelper:
             soup = BeautifulSoup(content, 'html.parser')
             script = soup.find('script', {'id': SCRIPT_ID})
             if not script:
-                self.logger.warning(f"Script with ID {SCRIPT_ID} not found")
+                self.logger.warning(f'Script with ID {SCRIPT_ID} not found')
                 return None
             try:
                 return json.loads(script.string)
             except json.JSONDecodeError:
-                self.logger.error("Error while loading json.")
+                self.logger.error('Error while loading json.')
                 return None
         except Exception as e:
-            self.logger.error(f"Error while parsing content: {e}")
+            self.logger.error(f'Error while parsing content: {e}')
             return None
 
     def close(self):

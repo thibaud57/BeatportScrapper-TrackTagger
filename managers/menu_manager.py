@@ -1,9 +1,10 @@
-from constants import SQLITE_DB_PATH, MENU_CHOICE_1, MENU_CHOICE_2, MENU_EXIT
-from enums import TrackInfo
-from processors.track_processor import TrackProcessor
-from processors.playlist_processor import PlaylistProcessor
-from loggers import AppLogger, SuccessLog
 import time
+
+from constants import SQLITE_DB_PATH, MENU_CHOICE_1, MENU_CHOICE_2, VALIDATE_KEY, DECLINE_KEY, EXIT_KEY
+from enums import TrackInfo
+from loggers import AppLogger, SuccessLog
+from processors.playlist_processor import PlaylistProcessor
+from processors.track_processor import TrackProcessor
 
 
 class MenuManager:
@@ -13,28 +14,29 @@ class MenuManager:
     def display_main_menu(self):
         while True:
             time.sleep(0.1)
-            print("###MENU###")
-            print("1. Extract Playlist Data")
-            print("2. Process Tracks")
-            choice = input("Enter your choice (or type 'exit' to quit): ")
+            print('###MENU###')
+            print(f'{MENU_CHOICE_1}. Extract Playlist Data')
+            print(f'{MENU_CHOICE_2}. Process Tracks')
+            choice = input(f'Enter your choice (or type {EXIT_KEY} to quit): ')
             if choice == MENU_CHOICE_1:
                 self._process_playlist()
             elif choice == MENU_CHOICE_2:
                 self._process_tracks()
-            elif choice.lower() == MENU_EXIT:
+            elif choice.lower() == EXIT_KEY:
                 break
             else:
-                self.logger.info("Invalid choice. Please enter 1, 2, or 'exit'.")
+                self.logger.info(f'Invalid choice. Please enter {MENU_CHOICE_1}, {MENU_CHOICE_2}, or {EXIT_KEY}.')
 
-    def confirmation_track_processor_menu(self, best_match, artist, title):
+    @staticmethod
+    def confirmation_track_processor_menu(best_match, artist, title, logger):
         while True:
             time.sleep(0.1)
             user_input = input(
-                f'Replace file: {artist} - {title}, by: {best_match[TrackInfo.ARTISTS.value]} - {best_match[TrackInfo.TITLE.value]} (Y/N)\n').lower()
-            if user_input in ['y', 'n']:
+                f'Replace file: {artist} - {title}, with: {best_match[TrackInfo.ARTISTS.value]} - {best_match[TrackInfo.TITLE.value]} ({VALIDATE_KEY}/{DECLINE_KEY})\n').lower()
+            if user_input in [VALIDATE_KEY, DECLINE_KEY]:
                 return user_input
             else:
-                self.logger.info('Invalid input. Please enter Y or N.')
+                logger.info(f'Invalid input. Please enter {VALIDATE_KEY} or {DECLINE_KEY}.')
 
     def _process_playlist(self):
         playlist_processor = PlaylistProcessor(SQLITE_DB_PATH)

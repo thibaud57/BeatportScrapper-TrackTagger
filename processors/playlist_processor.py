@@ -40,7 +40,7 @@ class PlaylistProcessor:
                 results = cursor.fetchall()
             return results
         except Exception as e:
-            self.logger.error(f"An error occurred while fetching playlist tracks: {e}")
+            self.logger.error(f'An error occurred while fetching playlist tracks: {e}')
             return None
 
     def _move_tracks(self, track):
@@ -53,9 +53,9 @@ class PlaylistProcessor:
             try:
                 if not destination_path.exists():
                     shutil.move(source_path, destination_path)
-                    self.logger.info(f"Moved: {file_path}")
+                    self.logger.info(f'Moved: {file_path}')
                     self.tracks_in_success.append((file_path, artist, title, destination_path))
                 else:
-                    self.logger.warning(f"Destination file already exists: {destination_path}")
+                    self.logger.warning(f'Destination file already exists: {destination_path}')
             except Exception as e:
-                self.logger.error(f"An error occurred while moving the file: {e}")
+                self.logger.error(f'An error occurred while moving the file: {e}')

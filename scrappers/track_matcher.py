@@ -27,16 +27,11 @@ class TrackMatcher:
         best_match = None
 
         for json_data in json_data_list:
-            if "," in artist or '&' in artist:
+            if ',' in artist or '&' in artist:
                 artist_score = fuzz.token_sort_ratio(artist, json_data[TrackInfo.ARTISTS.value].lower())
             else:
                 artist_score = fuzz.ratio(artist, json_data[TrackInfo.ARTISTS.value].lower())
             title_score = fuzz.ratio(title, json_data[TrackInfo.TITLE.value].lower())
-
-            # artist_tokens_diff = len(json_data[TrackInfo.ARTISTS.value].lower().split()) - len(artist.split())
-            # title_tokens_diff = len(json_data[TrackInfo.TITLE.value].lower().split()) - len(title.split())
-            # artist_score -= artist_tokens_diff
-            # title_score -= title_tokens_diff
 
             if TitleType.REMIX.value.lower() in title and TitleType.REMIX.value.lower() not in json_data[
                 TrackInfo.TITLE.value].lower():
