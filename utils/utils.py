@@ -1,11 +1,14 @@
+from typing import re
+
 from constants import INVALID_FILENAME_CHARS
 from enums import TitleType
 
 
 def clean_filename(filename):
-    for char in INVALID_FILENAME_CHARS:
-        filename = filename.replace(char, '')
-    return filename
+    pattern = f"([{''.join(INVALID_FILENAME_CHARS)}])\s*|\s*([{''.join(INVALID_FILENAME_CHARS)}])"
+    cleaned_filename = re.sub(pattern, ' ', filename)
+    cleaned_filename = re.sub(' +', ' ', cleaned_filename)
+    return cleaned_filename.strip()
 
 
 def clean_artist(artist):

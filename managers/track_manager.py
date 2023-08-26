@@ -27,11 +27,9 @@ class TrackManager:
 
     def _rename_track(self):
         audio = EasyID3(self.file_path)
-
         artist = clean_filename(', '.join(audio.get(ID3Metadata.ARTIST.value, [])))
         title = clean_filename(', '.join(audio.get(ID3Metadata.TITLE.value, [])))
         new_filename = f'{artist} - {title}{MusicFormat.MP3.value}'
-
         new_file_path = os.path.join(os.path.dirname(self.file_path), new_filename)
         os.rename(self.file_path, new_file_path)
         self.file_path = new_file_path
@@ -39,12 +37,9 @@ class TrackManager:
     def _move_track_to_done_folder(self):
         directory = os.path.dirname(self.file_path)
         done_folder_path = os.path.join(directory, DONE_FOLDER_NAME)
-
         if not os.path.exists(done_folder_path):
             os.makedirs(done_folder_path)
-
         file_name = os.path.basename(self.file_path)
         new_file_path = os.path.join(done_folder_path, file_name)
         shutil.move(self.file_path, new_file_path)
-
         return file_name
