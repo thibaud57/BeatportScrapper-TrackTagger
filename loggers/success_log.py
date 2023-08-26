@@ -30,11 +30,11 @@ class SuccessLog:
 
     def open_log_file(self):
         system_name = platform.system()
-        if system_name == OperationSystemName.WINDOWS:
+        if system_name == OperationSystemName.WINDOWS.value:
             os.startfile(self.log_file_path)
-        elif system_name == OperationSystemName.DARWIN:
+        elif system_name == OperationSystemName.DARWIN.value:
             os.system(f'open "{self.log_file_path}"')
-        elif system_name == OperationSystemName.LINUX:
+        elif system_name == OperationSystemName.LINUX.value:
             os.system(f'xdg-open "{self.log_file_path}"')
         else:
             print(f'Sorry, your system {system_name} is not supported right now.')
