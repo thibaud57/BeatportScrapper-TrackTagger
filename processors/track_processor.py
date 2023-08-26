@@ -67,8 +67,13 @@ class TrackProcessor:
             self.tracks_in_success.append((file_path, artist, title, new_file_path))
 
     def _show_failure(self):
-        for artist, title in self.tracks_in_failure:
-            self.logger.warning(f'Tracks in failure: \nNo best match found for: {artist} - {title}')
+        if self.tracks_in_failure:
+            self.logger.warning('Tracks in failure:')
+            failure_messages = []
+            for artist, title in self.tracks_in_failure:
+                failure_messages.append(f'No best match found for: {artist} - {title}')
+            failure_report = '\n'.join(failure_messages)
+            self.logger.warning(failure_report)
 
     def _confirm_and_process_tracks(self):
         for best_match, best_score, file_path, artist, title in self.tracks_to_confirm:

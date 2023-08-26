@@ -54,7 +54,7 @@ class MenuManager:
             self.logger.info('###START TRACKS PROCESSING###')
             track_processor.run()
         except Exception as e:
-            self.logger.error(f'n error occurred while processing the tracks: {e}')
+            self.logger.error(f'An error occurred while processing the tracks: {e}')
         finally:
             if len(track_processor.tracks_in_success) > 0:
                 self._handle_success_logs(track_processor)

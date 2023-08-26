@@ -1,4 +1,4 @@
-from typing import re
+import re
 
 from constants import INVALID_FILENAME_CHARS
 from enums import TitleType
