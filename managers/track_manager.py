@@ -2,6 +2,7 @@ import os
 import shutil
 
 from mutagen.easyid3 import EasyID3
+from mutagen.id3 import ID3NoHeaderError
 
 from constants import DONE_FOLDER_NAME
 from enums import ID3Metadata, MusicFormat
@@ -24,6 +25,9 @@ class TrackManager:
         except FileNotFoundError:
             self.logger.error(f'File not found: {self.file_path}')
             return None  # An error occurred during the workflow
+        except ID3NoHeaderError:
+            self.logger.error(f"'{self.file_path}' doesn't start with an ID3 tag")
+        return None  # An error occurred during the workflow
 
     def _rename_track(self):
         audio = EasyID3(self.file_path)
