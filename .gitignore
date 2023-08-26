@@ -10,6 +10,3 @@ venv/
 __pycache__/
 *.log
 *.bak
-
-# Other files or directories you don't want to version
-# (add them here if needed)
