@@ -17,7 +17,7 @@ class MenuManager:
             print('###MENU###')
             print(f'{MENU_CHOICE_1}. Extract Playlist Data')
             print(f'{MENU_CHOICE_2}. Process Tracks')
-            choice = input(f'Enter your choice (or type {EXIT_KEY} to quit): ')
+            choice = input(f'Enter your choice (or type "{EXIT_KEY}" to quit): ')
             if choice == MENU_CHOICE_1:
                 self._process_playlist()
             elif choice == MENU_CHOICE_2:
