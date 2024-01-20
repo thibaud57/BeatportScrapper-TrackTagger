@@ -8,3 +8,4 @@ from .title_type import TitleType
 from .operation_system_name import OperationSystemName
 from .playlist_type import PlaylistType
 from .menu_action import MenuAction
+from .playlist_key import PlaylistKey

@@ -1,6 +1,7 @@
 import time
 
-from constants import SQLITE_DB_PATH, MENU_CHOICE_1, MENU_CHOICE_2, VALIDATE_KEY, DECLINE_KEY, EXIT_KEY, JSON_PLAYLIST_PATH
+from constants import SQLITE_DB_PATH, MENU_CHOICE_1, MENU_CHOICE_2, VALIDATE_KEY, DECLINE_KEY, EXIT_KEY, \
+    JSON_PLAYLIST_PATH, MENU_CHOICE_3, TEXT_PLAYLIST_PATH
 from enums import TrackInfo, PlaylistType, MenuAction
 from loggers import TrackProcessingLog, AppLogger
 from processors.playlist_processor import PlaylistProcessor
@@ -12,7 +13,7 @@ class MenuManager:
         self.logger = AppLogger().get_logger()
         self.current_choice = None
         self.main_menu_text = "###MENU###\n1: Move Tracks From Playlist\n2: Process Tracks"
-        self.playlist_menu_text = "###PLAYLIST FORMAT###\n1: SQLITE\n2: JSON"
+        self.playlist_menu_text = "###PLAYLIST FORMAT###\n1: SQLITE\n2: JSON\n3: TEXT"
 
     def display_main_menu(self):
         main_menu_choices = {MENU_CHOICE_1: MenuAction.PROCESS_PLAYLIST.value,
@@ -49,7 +50,8 @@ class MenuManager:
 
     def _display_playlist_menu(self):
         playlist_menu_choices = {MENU_CHOICE_1: (PlaylistType.SQLITE.value, SQLITE_DB_PATH),
-                                 MENU_CHOICE_2: (PlaylistType.JSON.value, JSON_PLAYLIST_PATH)}
+                                 MENU_CHOICE_2: (PlaylistType.JSON.value, JSON_PLAYLIST_PATH),
+                                 MENU_CHOICE_3: (PlaylistType.TEXT.value, TEXT_PLAYLIST_PATH)}
         choice, action = self._get_user_choice(self.playlist_menu_text, playlist_menu_choices)
         if choice is not None:
             playlist_type, playlist_path = action
