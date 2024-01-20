@@ -30,6 +30,7 @@ can customize to your needs:
   playlist
   file. You can easily export your playlist into a text file from Rekordbox.
 
+
 - **ORIGINAL_TRACKS_FILE_PATH**: The default location is <your_original_tracks_folder>. Update this to the directory
   where your
   tracks are initially located before being moved by the playlist.  
@@ -40,6 +41,7 @@ can customize to your needs:
   Note: Subfolders are not supported yet for this feature.
 - **DONE_FOLDER_NAME**: Default name is 'done'. Change this if you prefer a different name for your final folder.
 
+
 - **ARTIST_TEXT_KEY**: This refers to the name of the artist key in the header of your text file. For example, if you
   export from Rekordbox in French, it would be "Artiste".
 - **TRACK_TITLE_TEXT_KEY**: This refers to the name of the track title key in the header of your text file. In French,
@@ -47,8 +49,8 @@ can customize to your needs:
 - **LOCATION_TEXT_KEY**: This refers to the name of the location key in the header of your text file. In French, it
   would be "Emplacement".
 
-- **ARTIST_SCORE_LIMIT**: This sets the minimum score required for artist name matching. The score must be between 0 and
-    100.
+
+- **ARTIST_SCORE_LIMIT**: This sets the minimum score required for artist name matching. The score must be between 0 and 100.
 - **TITLE_SCORE_LIMIT**: This sets the minimum score required for title matching. The score must be between 0 and 100.
 - **MATCHING_SCORE_LIMIT**: This determines the matching algorithm's accuracy threshold. A value of 0 is lenient,
   considering almost any result a match, while a value of 100 is strict, requiring an exact match. Adjust between 0 and
