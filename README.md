@@ -23,6 +23,8 @@ can customize to your needs:
 
 - **SQLITE_DB_PATH**: The default location is <your_sql_db_path>. Update this to the path of your SQLite database
   file.
+- **JSON_PLAYLIST_PATH**: The default location is <your_json_playlist_path>. Update this to the path of your JSON playlist
+  file.
 - **ORIGINAL_TRACKS_FILE_PATH**: The default location is <your_original_tracks_folder>. Update this to the directory where your
   tracks are initially located before being moved by the playlist.  
   Note: Subfolders are supported for this feature.
@@ -49,15 +51,17 @@ python main.py
 
 Upon running the main project, you'll be presented with a menu:
 
-1. **Extract Playlist Data**: This option allows you to extract track information from a specified playlist.
+1. **Move Tracks From Playlist**: This option allows you to move tracks from a specifier playlist to a done folder.
 2. **Process Tracks**: This option will proceed to update the tags of your music tracks.
 
 Select the appropriate option based on your needs.
 
 ### Extract Playlist
 
-1. Extract your playlist and point the `SQLITE_DB_PATH` constant to it.  
-   Note: Only SQLite databases are supported yet for this feature (i.e., VLC).
+1. Extract your playlist data and move files to a specified folder. 
+   Options: Select the option that matches the format of your playlist.
+   1. SQLITE format (i.e., VLC) -> point the `SQLITE_DB_PATH` constant to it.
+   2. JSON format -> point the `JSON_PLAYLIST_PATH` constant to it.
 2. Select your `ORIGINAL_TRACKS_FILE_PATH` where all your tracks are located.  
    Note: Subfolders are supported for this feature.
 3. Wait until the end of the program. Tracks are moved to `PROCESSING_TRACKS_FILE_PATH \ DONE_FOLDER_NAME`.
