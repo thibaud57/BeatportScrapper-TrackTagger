@@ -12,12 +12,13 @@ MENU_CHOICE_2 = '2'
 THREADS_NUMBER = 5
 SQLITE_QUERY_PATH = 'ressources/SQLitePlaylistQuerry.sql'
 SQLITE_DB_PATH = r"<your_sql_db_path>"  # Update this to the path of your SQLite database file
+JSON_PLAYLIST_PATH = r"<your_json_playlist_path>"  # Update this to the path of your JSON file
 ORIGINAL_TRACKS_FILE_PATH = '<your_original_tracks_folder>'  # Update this to the directory where your tracks are initially located before being moved by the playlist
 PROCESSING_TRACKS_FILE_PATH = '<your_final_tracks_folder>'  # Update this to the directory where your tracks are stored for processing
 DONE_FOLDER_NAME = 'done'  # Can be replaced with the desired folder name
-MATCHING_SCORE_LIMIT = 70
+MATCHING_SCORE_LIMIT = 90
 ARTIST_SCORE_LIMIT = 70
-TITLE_SCORE_LIMIT = 50
+TITLE_SCORE_LIMIT = 70
 '''
 Determines the threshold for matching accuracy. 
 A value of 0 makes the matching algorithm very lenient, allowing almost any result to be considered a match. 

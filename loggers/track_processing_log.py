@@ -6,27 +6,34 @@ from constants import DONE_FOLDER_NAME, PROCESSING_TRACKS_FILE_PATH
 from enums import OperationSystemName
 
 
-class SuccessLog:
-    def __init__(self, tracks_in_success, original_length):
+class TrackProcessingLog:
+    def __init__(self, tracks_in_success, tracks_in_failure, original_length):
         self.tracks_in_success = tracks_in_success
+        self.tracks_in_failure = tracks_in_failure
         self.original_length = original_length
-        self.final_length = len(self.tracks_in_success)
         self.done_folder_path = Path(PROCESSING_TRACKS_FILE_PATH) / DONE_FOLDER_NAME
-        self.log_file_path = os.path.join(self.done_folder_path, 'success_log.txt')
+        self.log_file_path = os.path.join(self.done_folder_path, '##log##.txt')
         if not os.path.exists(self.done_folder_path):
             os.makedirs(self.done_folder_path)
 
-    def write_success_log(self):
+    def write_log(self):
         try:
             with open(self.log_file_path, 'w', encoding='utf-8') as log_file:
-                log_file.write(f'Files successfully replaced ({self.final_length}/{self.original_length}):\n\n')
+                if len(self.tracks_in_failure) > 0:
+                    log_file.write(
+                        f'Files remplacement failed ({len(self.tracks_in_failure)}/{self.original_length}):\n\n')
+                    for path, artist, title in self.tracks_in_failure:
+                        log_file.write(f'Path: {path}\n')
+                        log_file.write(f'Track: {artist} - {title}\n\n')
                 if len(self.tracks_in_success) > 0:
+                    log_file.write(
+                        f'Files successfully replaced ({len(self.tracks_in_success)}/{self.original_length}):\n\n')
                     for old_path, artist, title, new_file_path in self.tracks_in_success:
                         log_file.write(f'Old path: {old_path}\n')
                         log_file.write(f'Old track: {artist} - {title}\n')
                         log_file.write(f'New path:  {new_file_path}\n\n')
         except IOError as e:
-            print(f'Erreur while writing succes log : {e}')
+            print(f'Error while writing logs : {e}')
 
     def open_log_file(self):
         system_name = platform.system()
