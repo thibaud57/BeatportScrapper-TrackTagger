@@ -6,9 +6,11 @@ import sqlite3
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
+import chardet
+
 from constants import ORIGINAL_TRACKS_FILE_PATH, PROCESSING_TRACKS_FILE_PATH, DONE_FOLDER_NAME, \
-    THREADS_NUMBER
-from enums import PlaylistType
+    THREADS_NUMBER, LOCATION_TEXT_KEY, ARTIST_TEXT_KEY, TRACK_TITLE_TEXT_KEY
+from enums import PlaylistType, PlaylistKey
 from loggers import AppLogger
 
 
@@ -26,40 +28,77 @@ class PlaylistProcessor:
 
     def run(self):
         tracks = self.fetch_playlist_tracks()
-        self.total_tracks = len(tracks)
-        if tracks:
+        if tracks is not None:
+            self.total_tracks = len(tracks)
             with ThreadPoolExecutor(max_workers=THREADS_NUMBER) as executor:
                 executor.map(self._move_tracks, [track for track in tracks])
-            # self._move_tracks(tracks)
         else:
             self.logger.warning('No tracks found in playlist!')
 
     def fetch_playlist_tracks(self):
-        if self.playlist_type == PlaylistType.SQLITE.value:
-            try:
-                with open(self.playlist_path, 'r') as file:
-                    query = file.read()
-                with sqlite3.connect(self.playlist_path) as conn:
-                    cursor = conn.cursor()
-                    cursor.execute(query)
-                    results = cursor.fetchall()
-                return results
-            except Exception as e:
-                self.logger.error(f'An error occurred while fetching playlist tracks from SQLite: {e}')
-        elif self.playlist_type == PlaylistType.JSON.value:
-            try:
+        match self.playlist_type:
+            case PlaylistType.SQLITE.value:
+                return self._extract_sqlite()
+            case PlaylistType.JSON.value:
+                return self._extract_json()
+            case PlaylistType.TEXT.value:
+                _json = self._convert_to_json()
+                return self._extract_json(_json)
+            case _:
+                self.logger.error(f'Unknown source type: {self.playlist_type}')
+        return None
+
+    def _extract_sqlite(self):
+        try:
+            with open(self.playlist_path, 'r') as file:
+                query = file.read()
+            with sqlite3.connect(self.playlist_path) as conn:
+                cursor = conn.cursor()
+                cursor.execute(query)
+                results = cursor.fetchall()
+            return results
+        except Exception as e:
+            self.logger.error(f'An error occurred while fetching playlist tracks from SQLite: {e}')
+
+    def _extract_json(self, provided_json=None):
+        try:
+            if provided_json is not None:
+                playlist = json.loads(provided_json)
+            else:
                 with open(self.playlist_path, 'r', encoding='utf-8') as file:
                     playlist = json.load(file)
-                filtered_playlist = []
-                for track in playlist:
-                    if all(key in track for key in ['file_path', 'artist', 'title']):
-                        filtered_playlist.append((track['file_path'], track['artist'], track['title']))
-                return filtered_playlist
-            except Exception as e:
-                self.logger.error(f'An error occurred while fetching playlist tracks from JSON: {e}')
-        else:
-            self.logger.error(f'Unknown source type: {self.playlist_type}')
-        return None
+            filtered_playlist = []
+            for track in playlist:
+                if all(key in track for key in
+                       [PlaylistKey.FILE_PATH.value, PlaylistKey.ARTIST.value, PlaylistKey.TITLE.value]):
+                    filtered_playlist.append((track[PlaylistKey.FILE_PATH.value], track[PlaylistKey.ARTIST.value],
+                                              track[PlaylistKey.TITLE.value]))
+            return filtered_playlist
+        except Exception as e:
+            self.logger.error(f'An error occurred while fetching playlist tracks from JSON: {e}')
+
+    def _convert_to_json(self):
+        try:
+            with open(self.playlist_path, 'rb') as file:
+                raw_data = file.read()
+                encoding = chardet.detect(raw_data)['encoding']
+            with open(self.playlist_path, 'r', encoding=encoding) as file:
+                lines = file.readline()
+                headers = lines.strip().split('\t')
+                artist_index = headers.index(ARTIST_TEXT_KEY)
+                title_index = headers.index(TRACK_TITLE_TEXT_KEY)
+                file_path_index = headers.index(LOCATION_TEXT_KEY)
+                data = []
+                for line in file:
+                    fields = line.strip().split('\t')
+                    data.append({
+                        PlaylistKey.ARTIST.value: fields[artist_index],
+                        PlaylistKey.TITLE.value: fields[title_index],
+                        PlaylistKey.FILE_PATH.value: fields[file_path_index]
+                    })
+            return json.dumps(data, indent=2, ensure_ascii=False)
+        except Exception as e:
+            self.logger.error(f'An error occurred while converting playlist text to JSON: {e}')
 
     def _move_tracks(self, track):
         file_path, artist, title = track

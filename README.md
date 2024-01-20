@@ -23,15 +23,30 @@ can customize to your needs:
 
 - **SQLITE_DB_PATH**: The default location is <your_sql_db_path>. Update this to the path of your SQLite database
   file.
-- **JSON_PLAYLIST_PATH**: The default location is <your_json_playlist_path>. Update this to the path of your JSON playlist
+- **JSON_PLAYLIST_PATH**: The default location is <your_json_playlist_path>. Update this to the path of your JSON
+  playlist
   file.
-- **ORIGINAL_TRACKS_FILE_PATH**: The default location is <your_original_tracks_folder>. Update this to the directory where your
+- **TEXT_PLAYLIST_PATH**: The default location is <your_text_playlist_path>. Update this to the path of your TEXT
+  playlist
+  file. You can easily export your playlist into a text file from Rekordbox.
+
+- **ORIGINAL_TRACKS_FILE_PATH**: The default location is <your_original_tracks_folder>. Update this to the directory
+  where your
   tracks are initially located before being moved by the playlist.  
   Note: Subfolders are supported for this feature.
-- **PROCESSING_TRACKS_FILE_PATH**: Default location is <your_final_tracks_folder>. Update this to the directory where your tracks are
+- **PROCESSING_TRACKS_FILE_PATH**: Default location is <your_final_tracks_folder>. Update this to the directory where
+  your tracks are
   stored.  
   Note: Subfolders are not supported yet for this feature.
 - **DONE_FOLDER_NAME**: Default name is 'done'. Change this if you prefer a different name for your final folder.
+
+- **ARTIST_TEXT_KEY**: This refers to the name of the artist key in the header of your text file. For example, if you
+  export from Rekordbox in French, it would be "Artiste".
+- **TRACK_TITLE_TEXT_KEY**: This refers to the name of the track title key in the header of your text file. In French,
+  it would be "Titre du morceau".
+- **LOCATION_TEXT_KEY**: This refers to the name of the location key in the header of your text file. In French, it
+  would be "Emplacement".
+
 - **ARTIST_SCORE_LIMIT**: This sets the minimum score required for artist name matching. The score must be between 0 and
     100.
 - **TITLE_SCORE_LIMIT**: This sets the minimum score required for title matching. The score must be between 0 and 100.
@@ -58,10 +73,16 @@ Select the appropriate option based on your needs.
 
 ### Extract Playlist
 
-1. Extract your playlist data and move files to a specified folder. 
+1. Extract your playlist data and move files to a specified folder.
    Options: Select the option that matches the format of your playlist.
-   1. SQLITE format (i.e., VLC) -> point the `SQLITE_DB_PATH` constant to it.
-   2. JSON format -> point the `JSON_PLAYLIST_PATH` constant to it.
+    1. SQLITE format (i.e., VLC) -> point the `SQLITE_DB_PATH` constant to it.
+    2. JSON format -> point the `JSON_PLAYLIST_PATH` constant to it.
+    3. TEXT format -> point the `TEXT_PLAYLIST_PATH` constant to it.
+       Note: You can export a playlist from Rekordbox into text. Ensure that the exported file includes the following columns: Artist, Track title, Location. The text file should be formatted as follows:
+   ```text
+   # Artist Track Title Genre	BPM	Key	Time Year Label Date Added Location
+   1. Artist name, Track title, Techno, 140, 3B, 05:00, 2024, Label, 2023-12-06, C:/MyDjFolder/track.mp3
+    ```
 2. Select your `ORIGINAL_TRACKS_FILE_PATH` where all your tracks are located.  
    Note: Subfolders are supported for this feature.
 3. Wait until the end of the program. Tracks are moved to `PROCESSING_TRACKS_FILE_PATH \ DONE_FOLDER_NAME`.
