@@ -2,3 +2,6 @@ beautifulsoup4==4.11.1
 fuzzywuzzy==0.18.0
 mutagen==1.46.0
 Requests==2.31.0
+pathlib~=1.0.1
+bs4~=0.0.1
+chardet~=5.2.0
