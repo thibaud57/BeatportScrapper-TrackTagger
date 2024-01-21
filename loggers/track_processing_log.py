@@ -22,8 +22,7 @@ class TrackProcessingLog:
                 if len(self.tracks_in_failure) > 0:
                     log_file.write(
                         f'Files remplacement failed ({len(self.tracks_in_failure)}/{self.original_length}):\n\n')
-                    for path, artist, title in self.tracks_in_failure:
-                        log_file.write(f'Path: {path}\n')
+                    for artist, title in self.tracks_in_failure:
                         log_file.write(f'Track: {artist} - {title}\n\n')
                 if len(self.tracks_in_success) > 0:
                     log_file.write(
