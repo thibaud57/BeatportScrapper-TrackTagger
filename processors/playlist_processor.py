@@ -121,4 +121,4 @@ class PlaylistProcessor:
                 self.logger.error(f'An error occurred while moving the file: {e}')
         else:
             self.logger.info(f'Failed: {path}')
-            self.tracks_in_failure.append((path, artist, title))
+            self.tracks_in_failure.append((artist, title))
