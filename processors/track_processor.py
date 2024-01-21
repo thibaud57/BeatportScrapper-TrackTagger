@@ -82,3 +82,5 @@ class TrackProcessor:
                 if managers.MenuManager.confirmation_track_processor_menu(best_match, artist, title,
                                                                           self.logger) == VALIDATE_KEY:
                     self._process_track(best_match, file_path, artist, title)
+                else:
+                    self.tracks_in_failure.append((artist, title))
