@@ -2,6 +2,6 @@ from enum import Enum
 
 
 class PlaylistKey(Enum):
-    ARTIST = 'artist'
+    ARTIST = 'name'
     TITLE = 'title'
-    FILE_PATH = 'file_path'
+    FILE_PATH = 'filename'
