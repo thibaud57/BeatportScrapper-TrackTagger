@@ -22,6 +22,6 @@ def clean_artist(artist):
 
 
 def add_original_name_to_title_if_needed(title):
-    if TitleType.REMIX.value.lower() in title and title.find('(') == -1 and title.find(')') == -1:
+    if TitleType.REMIX.value.lower() not in title and title.find('(') == -1 and title.find(')') == -1:
         title += f'({TitleType.ORIGINAL_MIX.value})'
     return title
