@@ -1,4 +1,5 @@
 import time
+from pathlib import Path
 
 from constants import SQLITE_DB_PATH, MENU_CHOICE_1, MENU_CHOICE_2, VALIDATE_KEY, DECLINE_KEY, EXIT_KEY, \
     JSON_PLAYLIST_PATH, MENU_CHOICE_3, TEXT_PLAYLIST_PATH
@@ -49,9 +50,9 @@ class MenuManager:
             self.logger.info(f'Invalid choice. Please enter a valid option or {EXIT_KEY} to quit.')
 
     def _display_playlist_menu(self):
-        playlist_menu_choices = {MENU_CHOICE_1: (PlaylistType.SQLITE.value, SQLITE_DB_PATH),
-                                 MENU_CHOICE_2: (PlaylistType.JSON.value, JSON_PLAYLIST_PATH),
-                                 MENU_CHOICE_3: (PlaylistType.TEXT.value, TEXT_PLAYLIST_PATH)}
+        playlist_menu_choices = {MENU_CHOICE_1: (PlaylistType.SQLITE.value, Path(SQLITE_DB_PATH)),
+                                 MENU_CHOICE_2: (PlaylistType.JSON.value, Path(JSON_PLAYLIST_PATH)),
+                                 MENU_CHOICE_3: (PlaylistType.TEXT.value, Path(TEXT_PLAYLIST_PATH))}
         choice, action = self._get_user_choice(self.playlist_menu_text, playlist_menu_choices)
         if choice is not None:
             playlist_type, playlist_path = action
