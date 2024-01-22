@@ -5,6 +5,8 @@ from enums import TitleType
 
 
 def clean_filename(filename):
+    if ' ' not in filename:
+        filename = filename.replace('_', ' ')
     pattern = f"([{''.join(INVALID_FILENAME_CHARS)}])\s*|\s*([{''.join(INVALID_FILENAME_CHARS)}])"
     cleaned_filename = re.sub(pattern, ' ', filename)
     cleaned_filename = re.sub(' +', ' ', cleaned_filename)
@@ -20,6 +22,6 @@ def clean_artist(artist):
 
 
 def add_original_name_to_title_if_needed(title):
-    if title.find('(') == -1 and title.find(')') == -1:
+    if TitleType.REMIX.value.lower() in title and title.find('(') == -1 and title.find(')') == -1:
         title += f'({TitleType.ORIGINAL_MIX.value})'
     return title
