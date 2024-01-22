@@ -105,7 +105,7 @@ class PlaylistProcessor:
         path = Path(file_path).name
         # Glob have problem when [ ] are included in text pattern
         safe_path_for_glob = path.replace('[', '[[]')
-        search_pattern = f"{ORIGINAL_TRACKS_FILE_PATH}/**/{safe_path_for_glob}"
+        search_pattern = f"{Path(ORIGINAL_TRACKS_FILE_PATH)}/**/{safe_path_for_glob}"
         matching_files = glob.glob(search_pattern, recursive=True)
         if matching_files:
             source_path = matching_files[0]
