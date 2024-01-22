@@ -1,4 +1,5 @@
 import os
+import re
 from urllib.request import urlopen
 
 from mutagen.easyid3 import EasyID3
@@ -7,26 +8,24 @@ from mutagen.mp3 import MP3
 
 from enums import ID3Metadata, TrackInfo
 from loggers import AppLogger
-from utils import clean_artist
+from utils import clean_artist, clean_filename, add_original_name_to_title_if_needed
 
 
 class MetadataManager:
     def __init__(self):
         self.logger = AppLogger().get_logger()
 
-    @staticmethod
-    def extract_metadata(file_path):
+    def extract_metadata(self, file_path):
         audio = EasyID3(file_path)
-        artist = clean_artist(audio.get(ID3Metadata.ARTIST.value, [None])[0])
-        title = audio.get(ID3Metadata.TITLE.value, [None])[0]
-        return artist, title
+        if audio:
+            artist = clean_artist(audio.get(ID3Metadata.ARTIST.value, [None])[0])
+            title = audio.get(ID3Metadata.TITLE.value, [None])[0]
+            return artist, title
+        else:
+            return self._extract_from_filename(file_path)
 
     def update_metadata(self, file_path, track):
         audio = EasyID3(file_path)
-        try:
-            audio.add_tags()
-        except Exception:
-            pass
         self._set_metadata_tags(audio, track)
         audio.save()
         self._set_artwork(file_path, track[TrackInfo.ARTWORK.value])
@@ -37,6 +36,14 @@ class MetadataManager:
         audio = EasyID3(file_path)
         audio.delete()
         audio.save()
+
+    @staticmethod
+    def _extract_from_filename(file_path):
+        filename = clean_filename(os.path.splitext(os.path.basename(file_path))[0])
+        parts = [part.strip() for part in re.split('-', filename)]
+        artist = clean_artist(parts[0])
+        title = add_original_name_to_title_if_needed(parts[1])
+        return artist, title
 
     @staticmethod
     def _set_metadata_tags(audio, track):

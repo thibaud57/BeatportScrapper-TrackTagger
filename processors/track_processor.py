@@ -42,8 +42,9 @@ class TrackProcessor:
             for file in files:
                 file_path = self.processing_tracks_file_path / str(file)
                 artist, title = self.metadata_manager.extract_metadata(file_path)
-                search_url = f"{BEATPORT_SEARCH_URL + quote_plus(artist + ' ' + title)}"
-                urls.append((search_url, file_path, artist, add_original_name_to_title_if_needed(title)))
+                if artist and title:
+                    search_url = f"{BEATPORT_SEARCH_URL + quote_plus(artist + ' ' + title)}"
+                    urls.append((search_url, file_path, artist, add_original_name_to_title_if_needed(title)))
         except IOError as e:
             self.logger.error(f'Error while reading file : {e}')
         return urls
