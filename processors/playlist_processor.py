@@ -9,7 +9,7 @@ from pathlib import Path
 import chardet
 
 from constants import ORIGINAL_TRACKS_FILE_PATH, PROCESSING_TRACKS_FILE_PATH, DONE_FOLDER_NAME, \
-    THREADS_NUMBER, LOCATION_TEXT_KEY, ARTIST_TEXT_KEY, TRACK_TITLE_TEXT_KEY
+    THREADS_NUMBER, LOCATION_TEXT_KEY, ARTIST_TEXT_KEY, TRACK_TITLE_TEXT_KEY, SQLITE_QUERY_PATH
 from enums import PlaylistType, PlaylistKey
 from loggers import AppLogger
 
@@ -50,7 +50,7 @@ class PlaylistProcessor:
 
     def _extract_sqlite(self):
         try:
-            with open(self.playlist_path, 'r') as file:
+            with open(SQLITE_QUERY_PATH, 'r') as file:
                 query = file.read()
             with sqlite3.connect(self.playlist_path) as conn:
                 cursor = conn.cursor()
