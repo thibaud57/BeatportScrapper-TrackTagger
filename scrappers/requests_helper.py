@@ -19,22 +19,19 @@ class RequestsHelper:
             try:
                 response = self.session.get(search_url, headers=self.headers)
                 self.logger.info(f'Search url: {search_url} with status: {response.status_code}')
-
                 if response.status_code == StatusCode.SUCCESS.value:
                     return self.crawler(response.content)
-
                 elif response.status_code == StatusCode.FORBIDDEN.value:
                     self.logger.warning('Received a 403 status code. Retrying...')
                     continue
-
                 else:
                     self.logger.warning(f'Failed to fetch the page. Status code: {response.status_code}')
                     return None
-
             except requests.RequestException as e:
                 self.logger.error(f'Request error: {e}')
                 continue
-
+            finally:
+                self.close()
         self.logger.warning('Max retries reached. Exiting.')
         return None
 
