@@ -1,10 +1,11 @@
 import time
 from pathlib import Path
 
-from constants import SQLITE_DB_PATH, MENU_CHOICE_1, MENU_CHOICE_2, VALIDATE_KEY, DECLINE_KEY, EXIT_KEY, \
-    JSON_PLAYLIST_PATH, MENU_CHOICE_3, TEXT_PLAYLIST_PATH
-from enums import TrackInfo, PlaylistType, MenuAction
-from loggers import TrackProcessingLog, AppLogger
+from constants import (DECLINE_KEY, EXIT_KEY, JSON_PLAYLIST_PATH,
+                       MENU_CHOICE_1, MENU_CHOICE_2, MENU_CHOICE_3,
+                       SQLITE_DB_PATH, TEXT_PLAYLIST_PATH, VALIDATE_KEY)
+from enums import MenuAction, PlaylistType, TrackInfo
+from loggers import AppLogger, TrackProcessingLog
 from processors.playlist_processor import PlaylistProcessor
 from processors.track_processor import TrackProcessor
 
@@ -37,6 +38,17 @@ class MenuManager:
                 return user_input
             else:
                 logger.info(f'Invalid input. Please enter {VALIDATE_KEY} or {DECLINE_KEY}.')
+
+    @staticmethod
+    def manual_link_menu(artist, title, logger):
+        while True:
+            user_input = input(f'Do you want to provide manual Beatport URL for: {artist} - {title} (y/n)\n').lower()
+            if user_input == VALIDATE_KEY:
+                url = input('Please enter the complete Beatport URL:\n')
+                return url.strip()
+            elif user_input == DECLINE_KEY:
+                return None
+            logger.info(f'Invalid input. Please enter {VALIDATE_KEY} or {DECLINE_KEY}.')
 
     def _get_user_choice(self, menu_text, valid_choices):
         while True:

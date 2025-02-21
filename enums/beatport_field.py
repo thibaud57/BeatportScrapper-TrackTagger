@@ -19,3 +19,8 @@ class BeatportField(Enum):
     BPM = 'bpm'
     KEY_NAME = 'key_name'
     ISRC = 'isrc'
+    NAME = 'name'
+    NUMBER = 'number'
+    IMAGE = 'image'
+    URI = 'uri'
+    PUBLISH_DATE = 'publish_date'

@@ -4,12 +4,13 @@ from pathlib import Path
 from urllib.parse import quote_plus
 
 import managers
-from constants import PROCESSING_TRACKS_FILE_PATH, MATCHING_SCORE_LIMIT, VALIDATE_KEY, BEATPORT_SEARCH_URL, \
-    THREADS_NUMBER
+from constants import (BEATPORT_SEARCH_URL, MATCHING_SCORE_LIMIT,
+                       PROCESSING_TRACKS_FILE_PATH, THREADS_NUMBER,
+                       VALIDATE_KEY)
 from enums import MusicFormat
 from loggers import AppLogger
 from managers import MetadataManager, TrackManager
-from scrappers import TrackMatcher, RequestsHelper
+from scrappers import RequestsHelper, TrackMatcher
 from utils import add_original_name_to_title_if_needed
 
 
@@ -23,6 +24,7 @@ class TrackProcessor:
         self.total_tracks = 0
         self.tracks_in_success = []
         self.tracks_to_confirm = []
+        self.tracks_manual_link = []
         self.tracks_in_failure = []
 
     def run(self):
@@ -31,6 +33,7 @@ class TrackProcessor:
             executor.map(self._process_file, urls_datas)
         self._show_failure()
         self._confirm_and_process_tracks()
+        self._insert_manual_link()
 
     def _build_search_urls(self):
         urls = []
@@ -55,7 +58,7 @@ class TrackProcessor:
         if track_info_list := self.track_matcher.parse_track_info(data):
             best_match, best_score = self.track_matcher.find_best_match(artist.lower(), title.lower(), track_info_list)
             if best_match is None:
-                self.tracks_in_failure.append((artist, title))
+                self.tracks_manual_link.append((file_path, artist, title))
             elif best_score <= MATCHING_SCORE_LIMIT:
                 self.tracks_to_confirm.append((best_match, best_score, file_path, artist, title))
             else:
@@ -83,5 +86,19 @@ class TrackProcessor:
                 if managers.MenuManager.confirmation_track_processor_menu(best_match, artist, title,
                                                                           self.logger) == VALIDATE_KEY:
                     self._process_track(best_match, file_path, artist, title)
+                else:
+                    self.tracks_manual_link.append((file_path, artist, title))
+
+    def _insert_manual_link(self):
+        if self.tracks_manual_link:
+            self.logger.info('Tracks for manual URL input:')
+            for file_path, artist, title in self.tracks_manual_link:
+                if url := managers.MenuManager.manual_link_menu(artist, title, self.logger):
+                    data = self.helper.search_track(url)
+                    if track_info := self.track_matcher.parse_manual_track_info(data):
+                        self._process_track(track_info, file_path, artist, title)
+                    else:
+                        self.logger.error(f'Failed to process manual URL for: {artist} - {title}')
+                        self.tracks_in_failure.append((artist, title))
                 else:
                     self.tracks_in_failure.append((artist, title))
