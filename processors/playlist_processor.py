@@ -8,9 +8,10 @@ from pathlib import Path
 
 import chardet
 
-from constants import ORIGINAL_TRACKS_FILE_PATH, PROCESSING_TRACKS_FILE_PATH, DONE_FOLDER_NAME, \
-    THREADS_NUMBER, LOCATION_TEXT_KEY, ARTIST_TEXT_KEY, TRACK_TITLE_TEXT_KEY, SQLITE_QUERY_PATH
-from enums import PlaylistType, PlaylistKey
+from constants import (ARTIST_TEXT_KEY, DONE_FOLDER_NAME, LOCATION_TEXT_KEY,
+                       ORIGINAL_TRACKS_FILE_PATH, PROCESSING_TRACKS_FILE_PATH,
+                       SQLITE_QUERY_PATH, THREADS_NUMBER, TRACK_TITLE_TEXT_KEY)
+from enums import PlaylistKey, PlaylistType
 from loggers import AppLogger
 
 
@@ -53,6 +54,10 @@ class PlaylistProcessor:
             with open(SQLITE_QUERY_PATH, 'r') as file:
                 query = file.read()
             with sqlite3.connect(self.playlist_path) as conn:
+                def filename_collation(s1, s2):
+                    return 1 if s1.lower() > s2.lower() else -1 if s1.lower() < s2.lower() else 0
+                
+                conn.create_collation("FILENAME", filename_collation)
                 cursor = conn.cursor()
                 cursor.execute(query)
                 results = cursor.fetchall()
