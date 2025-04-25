@@ -5,3 +5,4 @@ Requests==2.31.0
 pathlib~=1.0.1
 bs4~=0.0.1
 chardet~=5.2.0
+python-Levenshtein>=0.12.0

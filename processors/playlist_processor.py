@@ -106,7 +106,19 @@ class PlaylistProcessor:
             self.logger.error(f'An error occurred while converting playlist text to JSON: {e}')
 
     def _move_tracks(self, track):
-        file_path, artist, title = track
+        # Handle different track formats based on the extraction method
+        if isinstance(track, tuple) and len(track) == 1:
+            # SQLite case - Only filename
+            file_path = track[0]
+            artist = "Osef"
+            title = "Osef"
+        elif isinstance(track, tuple) and len(track) == 3:
+            # JSON/TEXT case - Full information
+            file_path, artist, title = track
+        else:
+            self.logger.error(f'Unexpected track format: {track}')
+            return
+            
         path = Path(file_path).name
         # Glob have problem when [ ] are included in text pattern
         safe_path_for_glob = path.replace('[', '[[]')
